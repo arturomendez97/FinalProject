@@ -1,0 +1,373 @@
+
+* {
+    box-sizing: border-box;
+    background-color: #131716;
+  }
+
+/*Afecta todo dentro de bbody*/
+body{
+    font-family: 'Baloo Paaji 2', cursive;
+    /*No afecta lo que  ya tenga un style para el font size, como los headers*/
+    font-size : 14px;
+    /*color : blue*/
+    /*color : rgb(200)*/
+    /*Hexadecimal es el más común*/
+    color : #4F545F;
+    /*Si pones solo 1 numero en margin, afecta los 4 lados. Si pones 2, el primero es para arriba y abajo y el segundo para los lados.*/
+    /*Puedes poner 4 para los 4 lados*/
+    /*También funciona margin-left, igual -top, right, bottom-  */
+    margin : 0;
+    padding : 0;
+    font-family: 'Baloo Paaji 2', cursive;
+}
+
+section{
+  margin: 0;
+  padding: 0;
+}
+
+.rounded_img{
+  border-radius: 5%;
+}
+
+.introduction{
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    color: white;
+    padding: 50px;
+    margin: 0;
+    height : 400px;
+    background-image: url("../assets/cover3.png");
+    background-repeat: no-repeat;
+    background-size: 200% 100%;
+}
+
+.menu, .lowerMenu {
+    margin: 20px;
+    cursor : pointer;
+    height: 20px;
+    color: lightgray;
+    background-color: #131716;
+  }
+  
+
+.navigation{
+    display: flex;
+    background-color: #131716;
+    font-family: 'Dosis', sans-serif;
+    justify-content: center;
+    border-bottom : 1px solid #37403e;
+  }
+
+.gallery{
+    justify-content: center;
+  }
+  
+  /* Style the links inside the navigation bar */
+.navigation a {
+    color: #2f9c95;
+    text-align: center;
+    font-size: 17px;
+  }
+
+.text {
+    color: #2f9c95;
+    text-align: center;
+    font-size: 17px;
+  }
+
+.label {
+    color: #2f9c95;
+    text-align: center;
+    font-size: 17px;
+  }
+  
+  /* Change the color of links on hover */
+.navigation a:hover {
+    color: #44cf6c;
+  }
+  
+  /* Style the "active" element to highlight the current page */
+.navigation a.activeOption, a.lowerActiveOption {
+    color: #44cf6c;
+  }
+  
+  /* Style the search box inside the navigation bar */
+.search {
+    border: none;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: auto;
+    font-size: 17px;
+    background-color: #37403e;
+    color: lightgray;
+    width: 100%;
+    font-family: 'Baloo Paaji 2', cursive;
+  }
+
+.loginSection{
+    border : 1px solid #37403e; 
+
+  }
+
+.logSignIn{
+    display: flex;
+    justify-content: left;
+    background-color: #2F9C95;
+    border-radius: 2%;
+    margin : 10px;
+  }
+
+
+.submit-btn{
+    background-color : #2F9C95;
+    cursor: pointer;
+    font-size: 17px;
+    color: lightgray;
+    font-family: 'Dosis', sans-serif;
+    margin : 10px;
+}
+
+.submit-btn:hover{
+    background-color : #44cf6c;
+}
+
+
+
+.clickable{
+    padding : 10px 20px;
+    margin-left : 15px;
+    color : white;
+    border : 0;
+    border-radius : 7px;
+    text-align : center;
+}
+
+fieldset{
+    border: none;
+    border-radius: 2%;
+    }
+
+h1{
+    margin: 0;
+    color : white;
+    padding : 10px;
+    text-align: center;
+    width: 200;
+}
+
+h2{
+  font-size: 40px;
+}
+
+.gallery{
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+}
+
+.thumbnail{
+    display: inline-flex;
+    height: 238px;
+    width: 50%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+.thumbnail:hover{
+    opacity: 0.7;
+}
+
+/*
+.thumbnail .img-top {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+
+}
+
+.thumbnail:hover .img-top {
+    display: inline;
+    filter: alpha(opacity=50);
+}*/
+
+footer{
+  border-top : 1px solid #37403e;
+}
+
+.extraSection{
+  border-bottom : 1px solid #37403e;
+  text-align: center;
+}
+
+.aboutSection, .externalSection{
+  font-size: 17px;
+  color: white;
+  text-align: center;
+}
+
+table{
+  margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 900px;
+    text-overflow: ellipsis;
+}
+
+p{
+    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: 400px;
+    text-overflow: ellipsis;
+}
+
+div{
+    list-style : none;
+    margin : 0;
+    padding : 0;
+    /*Cuando se usa float, se le pone overflow auto al parent element*/
+    overflow : auto;
+}
+
+/*QUe esten flotando, alinea los elementos. Sirve para hacer navigation bar*/
+li{
+    float : left;
+    padding : 20px;
+}
+
+.hidden{
+    display: none;
+}
+
+.cover{
+    display: flex;
+    justify-content: center;
+}
+
+form{
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    border: none;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 2%;
+}
+
+.optionContainer{
+    margin: 20px;
+}
+
+.formElement {
+    border: none;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: auto;
+    font-size: 17px;
+    background-color: #37403e;
+    color: lightgray;
+    width: 100%;
+    font-family: 'Baloo Paaji 2', cursive;
+  }
+
+@media (min-width:500px) and (max-width:900px){
+
+  .introduction{
+    background-size: 150% 100%;
+  }
+
+  .thumbnail{
+    display: inline-flex;
+    height: 238px;
+    width: 33%;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .login{
+    background-image: url("../assets/cover.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin: 50px;
+    padding: 50px;
+    display: flex;
+    border: none;
+    justify-content: center;
+    width: 70%;
+    height: 100%;
+    border-radius: 2%;
+}
+
+  .signup{
+    background-image: url("../assets/cover2.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin: 50px;
+    padding: 50px;
+    display: flex;
+    border: none;
+    justify-content: center;
+    width: 70%;
+    height: 100%;
+    border-radius: 2%;
+  }
+}
+
+
+@media (min-width: 901px){
+  
+    .introduction{
+      background-size: 100% 100%;
+    }
+
+    .menu, .lowerMenu{
+        width: 5%;
+    }
+
+    .login{
+      background-image: url("../assets/cover.png");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      margin: 100px;
+      padding: 100px;
+      display: flex;
+      border: none;
+      justify-content: center;
+      width: 70%;
+      height: 100%;
+      border-radius: 2%;
+  }
+
+    .signup{
+      background-image: url("../assets/cover2.png");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      margin: 100px;
+      padding: 100px;
+      display: flex;
+      border: none;
+      justify-content: center;
+      width: 70%;
+      height: 100%;
+      border-radius: 2%;
+    }
+
+    .thumbnail{
+      display: inline-flex;
+      height: 238px;
+      width: 12.5%;
+      cursor: pointer;
+      position: relative;
+    }
+}
