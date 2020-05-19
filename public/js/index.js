@@ -89,8 +89,10 @@ function artworkPageEvent(){
             elementToShow.classList.remove("hidden");
             elementToShow.classList.add("selectedSection");
 
-            console.log(currentElement)
-            elementToShow.innerHTML = `${currentElement.outerHTML}`
+            let rightSide = document.querySelector(".display");
+
+            console.log(rightSide)
+            rightSide.innerHTML = `<img class = "artwork" src = ${currentElement.src} height="700" width="800" alt= "Artwork">`
 
         });
 }

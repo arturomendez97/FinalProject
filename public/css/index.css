@@ -64,6 +64,7 @@ section{
 .gallery{
     justify-content: center;
   }
+
   
   /* Style the links inside the navigation bar */
 .navigation a {
@@ -122,7 +123,7 @@ section{
   }
 
 
-.submit-btn{
+.submit-btn, .followBtn{
     background-color : #2F9C95;
     cursor: pointer;
     font-size: 17px;
@@ -151,12 +152,13 @@ fieldset{
     border-radius: 2%;
     }
 
+
+
 h1{
     margin: 0;
     color : white;
     padding : 10px;
     text-align: center;
-    width: 200;
 }
 
 h2{
@@ -173,9 +175,11 @@ h2{
     display: inline-flex;
     height: 238px;
     width: 50%;
+    height: auto;
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    
   }
 
 .thumbnail:hover{
@@ -281,8 +285,114 @@ form{
     font-family: 'Baloo Paaji 2', cursive;
   }
 
+.artworkContainer{
+  display: flex;
+  flex-direction: column;
+}
+
+.artwork{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.leftSide{
+  width: 100%;
+  border-right : 10px solid #44cf6c;
+}
+
+.rightSide{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.display{
+  background-color: black;
+}
+
+
+
+h3{
+  height : 50px;
+  color : white;
+  text-align: left;
+  font-size: 25px;
+  font-family: 'Dosis', sans-serif;
+  margin : 10px;
+  padding-left: 10px;
+  border-bottom: 1px solid #37403e;
+
+}
+
+.comments{
+  margin-bottom: 100px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.commentUser{
+  width : 10%;
+  color: white;
+  font-size: 17px;
+  background-color: #37403e;
+  margin: 10px;
+  text-align: left;
+}
+
+.comment{
+  display: flex;
+  flex-direction: row;
+  background-color: #37403e;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 50px;
+  margin : 50px;
+}
+
+.commentText{
+  color: white;
+  text-align: left;
+  background-color: #37403e;
+  font-size: 17px;
+  margin : 20px;
+  width: 80%;
+}
+
+
+@media (max-width:500px){
+  td{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 55%;
+  } 
+
+  th{
+    display: none;
+  }
+
+  .artwork{
+    width: 100%;
+    height: auto;
+  }
+}
+
+
 @media (min-width:500px) and (max-width:900px){
 
+  table{
+    display: flex;
+    width: 88%;
+  } 
+
+  th{
+    display: none;
+  }
+    
   .introduction{
     background-size: 150% 100%;
   }
@@ -327,6 +437,7 @@ form{
 
 @media (min-width: 901px){
   
+
     .introduction{
       background-size: 100% 100%;
     }
@@ -369,5 +480,22 @@ form{
       width: 12.5%;
       cursor: pointer;
       position: relative;
+    }
+
+    .artworkContainer{
+      display: flex;
+      flex-direction: row;
+    }
+    
+    .leftSide{
+      width: 20%;
+      border-right : 10px solid #44cf6c;
+    }
+    
+    .rightSide{
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 }
