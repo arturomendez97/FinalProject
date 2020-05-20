@@ -1,99 +1,31 @@
-
-function userSignupFetch( username, email, password ){
-    let url = '/api/users/register';
-
-    let data = {
-        username,
-        email,
-        password
+let url = "/api/validate-user";
+let settings = {
+    method : 'GET',
+    headers : {
+        sessiontoken : localStorage.getItem( 'token' )
     }
+};
 
-    let settings = {
-        method : 'POST',
-        headers : {
-            'Content-Type' : 'application/json'
-        },
-        body : JSON.stringify( data )
-    }
+fetch( url, settings )
+    .then( response => {
+        if( response.ok ){
+            return response.json();
+        }
 
-    let results = document.querySelector( '.signup_Results' );
-
-    fetch( url, settings )
-        .then( response => {
-            if( response.ok ){
-                return response.json();
-            }
-            throw new Error( response.statusText );
-        })
-        .then( responseJSON => {
-            userLoginFetch( data.email, data.password )
-        })
-        .catch( err => {
-            results.innerHTML = `<div> ${err.message} </div>`;
-        });
-}
-
-function userLoginFetch( email, password ){
-    let url = '/api/users/login';
-
-    let data = {
-        email,
-        password
-    }
-
-    let settings = {
-        method : 'POST',
-        headers : {
-            'Content-Type' : 'application/json'
-        },
-        body : JSON.stringify( data )
-    }
-
-    let results = document.querySelector( '.login_Results' );
-
-    fetch( url, settings )
-        .then( response => {
-            if( response.ok ){
-                return response.json();
-            }
-            throw new Error( response.statusText );
-        })
-        .then( responseJSON => {
-            localStorage.setItem( 'token', responseJSON.token );
-            window.location.href = "/pages/home.html";
-        })
-        .catch( err => {
-            results.innerHTML = `<div> ${err.message} </div>`;
-        });
-}
-
-function watchLoginForm(){
-    let loginForm = document.querySelector( '.login' );
-
-    loginForm.addEventListener( 'submit' , ( event ) => {
-        event.preventDefault();
-        let email = document.getElementById( 'email_Login' ).value;
-        let password = document.getElementById( 'password_Login' ).value;
-
-        userLoginFetch( email, password );
+        throw new Error( response.statusText );
     })
-}
-
-function watchSignupForm(){
-    let loginForm = document.querySelector( '.signup' );
-
-    loginForm.addEventListener( 'submit' , ( event ) => {
-        event.preventDefault();
-        let username = document.getElementById( 'username_Signup' ).value;
-        let email = document.getElementById( 'email_Signup' ).value;
-        let password = document.getElementById( 'password_Signup' ).value;
-
-        userSignupFetch( username, email, password );
+    .then( responseJSON => {
+        //let greeting = document.querySelector( '.greeting' );
+        //greeting.innerHTML = `Welcome back ${responseJSON.firstName} ${responseJSON.lastName}!`;
     })
-}
+    .catch( err => {
+        console.log( err.message );
+        window.location.href = "../index.html";
+    });
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
 function navigationBarEvent(){
     let navigationElements = document.getElementsByClassName("menu")
@@ -128,7 +60,7 @@ function navigationBarEvent(){
     }
 
 }
-/*
+
 function lowerNavigationBarEvent(){
     let navigationElements = document.getElementsByClassName("lowerMenu")
     console.log(navigationElements)
@@ -162,7 +94,6 @@ function lowerNavigationBarEvent(){
     }
 }
 
-/*
 function artworkPageEvent(){
     let navigationElements = document.getElementsByClassName("thumbnail")
     console.log(navigationElements)
@@ -192,15 +123,23 @@ function artworkPageEvent(){
             rightSide.innerHTML = `<img class = "artwork" src = ${currentElement.src} height="700" width="800" alt= "Artwork">`
 
         });
+    }
 }
+
+function watchLogoutButton(){
+    let logOutBtn = document.querySelector( '.logOut' );
+
+    logOutBtn.addEventListener( 'click' , ( event ) => {
+        localStorage.removeItem( 'token' );
+        window.location.href = "../index.html";
+    })
 }
-*/
+
 function init(){
     navigationBarEvent();
-    //lowerNavigationBarEvent();
-    //artworkPageEvent();
-    watchLoginForm();
-    watchSignupForm();
+    lowerNavigationBarEvent();
+    artworkPageEvent();
+    watchLogoutButton();
 }
 
 init();

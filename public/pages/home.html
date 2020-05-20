@@ -1,0 +1,229 @@
+
+<!--Dice que version de html es-->
+<!DOCTYPE html>
+
+<!--Accesibilidad0, establece el idioma-->
+<html lang="en">
+
+
+<html>
+    <head>
+    <!---Para cosas especiales que se utilizen. Código, frameworks, etc... Para describir la página. Lo que ponemos aquí no se ve en la página.-->
+        <title>
+            Final Project   
+        </title>
+        <!---Incluir keyboard latinoamericano con el meta tag-->
+        <meta charset="UTF-8">
+        <!-- Linkear al css-->
+        <link rel="stylesheet" type="text/css" href="./../css/home.css">
+        <link href="https://fonts.googleapis.com/css2?family=Baloo+Paaji+2&family=Dosis:wght@800&display=swap" rel="stylesheet"> 
+    </head>
+
+    <body>
+        
+        <!--Unordered list, bullets
+        <section class= "navigation">
+            <div class = "menu activeOption" id = "home">
+                Logo
+                </a>
+            </div>
+            <div class = "right menu" id = "about">
+                    Login
+                </a>
+            </div>
+            <div class = "menu" id = "review">
+                    Signup
+                </a>
+            </div>
+    </section>-->
+    
+    <div class="navigation">
+        <a class="menu activeOption" id = "home">Home</a>
+        <input class = "search" type="text" placeholder="Search...">
+        <a class = "logOut" id = "Profile">LogOut</a>
+        <a class="menu" id = "signup">Profile</a>
+      </div> 
+      
+      <section class = "extraSection">
+          <a class = "menu" id = "about">About us</a>
+          <a class="menu" id = "external">External Links</a>
+
+      </section>
+
+    
+
+        <section class = "homeSection selectedSection">
+            <div>
+                <h1> The place to learn.</h1>
+
+                <h1 class = "introduction"> Where artists from around the world display their works, recieve critique, and push others forward into their journey. </h1>
+            </div>
+
+            <div class="navigation">
+                <a class = "lowerMenu lowerActiveOption" id = "recent">Recent</a>
+                <a class="lowerMenu" id = "following">Following</a>
+              </div> 
+    
+                <section class = "gallery recentSection lowerSelectedSection">
+
+                    <div class = "thumbnail" >
+                    <img src = "./../assets/1.png" height="238" width="238" alt= "Artwork">
+                      <!--<img src = "./assets/gradient.png" height="238" width="238" class = "img-top" alt= "Artwork">
+                      <h2 class = "img-top">User</h2>-->
+                    </div>
+
+                    <div class = "thumbnail">
+                      <img src = "./../assets/2.png" height="238" width="238" alt= "Artwork">
+                    </div>
+                    
+                    <div class = "thumbnail">
+                      <img src = "./../assets/3.png" height="238" width="238" alt= "Artwork">
+                    </div>
+
+                    <div class = "thumbnail">
+                      <img src = "./../assets/4.png" height="238" width="238" alt= "Artwork">
+                    </div>
+                    
+                    <div class = "thumbnail">
+                      <img src = "./../assets/5.png" height="238" width="238" alt= "Artwork">
+                    </div>
+                    <div class = "thumbnail">
+                      <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
+                    </div>
+                    <div class = "thumbnail">
+                      <img src = "./../assets/7.png" height="238" width="238" alt= "Artwork">
+                    </div>
+                    <div class = "thumbnail">
+                      <img src = "./../assets/8.png" height="238" width="238" alt= "Artwork">
+                    </div>
+                    <div class = "thumbnail">
+                      <img src = "./../assets/3.png" height="238" width="238" alt= "Artwork">
+                    </div>
+                </section>
+
+              <section class = "gallery followingSection hidden">
+              
+                <div class = "thumbnail">
+                  <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
+                </div>
+              </section>
+        </section>
+        
+        <section class = "profileSection hidden">
+        </section>
+
+        <section class = "aboutSection hidden">
+          <div>
+            <h2>Welcome to artidk!</h2>
+            <p>This is the new and rising social / learning hub for artists. This is not a portafolio builder. Here you're free to upload any current work in progress
+              or finished art with the intent of getting critique. 
+            </p>
+            <p>Who will give you feedback? Other users! And you as well can comment on other people's art.</p>
+            <p>Of course, you can also like, favourite, and follow other artists. However, the main page only shows recent artworks and the ones from the people you follow.
+              There's no sort by likes or favorites because this is not a popularity contest, this is for learning.
+            </p>
+          </div>
+        </section>
+
+        <section class = "externalSection hidden">
+          <h2>Eager to study even more?</h2>
+          <p>Here's some really helpful resources for beginner and advanced artists alike.</p>
+          <table>
+            <tr>
+              <th>
+                <h1>Draw a box</h1>
+              </th>
+              <th>
+                <h1>Cycra</h1>
+              </th>
+              <th>
+                <h1>Proko</h1>
+              </th>
+            </tr>
+            <tr>
+              <td>
+                <a href = "https://drawabox.com/">
+                  <img class = "rounded_img" src = "./../assets/external/drawabox.png" height="125" width="250" alt= "Artwork">
+                </a>
+              </td>
+              <td>
+                <a href = "https://www.youtube.com/user/Sycra">
+                  <img class = "rounded_img" src = "./../assets/external/Sycra.png" height="125" width="250" alt= "Artwork">
+                </a>
+              </td>
+              <td>
+                <a href = "https://www.youtube.com/user/ProkoTV">
+                  <img class = "rounded_img" src = "./../assets/external/Proko.png" height="125" width="250" alt= "Artwork">
+                </a>
+              </td>
+            </tr>
+          </table>
+        </section>
+
+        <section class = "ArtworkSection hidden">
+          <div class = "artworkContainer">
+           <div class = "leftSide">
+            <h1>
+              Username
+            </h1>
+            <button class = "clickable followBtn" type="button">Follow</button> 
+            <h1>
+              Artwork name
+            </h1>
+            <p>
+              Description
+            </p>
+            <p>
+              Like
+            </p>
+            <p>
+              Favorite
+            </p>
+           </div>
+           <div class = "rightSide">
+             <div class = "display">
+
+             </div>
+               <h3>
+                 Comments
+               </h3>
+             <div class = "comments">
+
+              <div class = "comment"> 
+                <div class = "commentUser">
+                  Username
+                </div>
+                <div class = "commentText">
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+                 ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi 
+                 ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                   deserunt mollit anim id est laborum."
+                </div>
+              </div>
+
+              <div class = "comment"> 
+                <div class = "commentUser">
+                  Username
+                </div>
+                <div class = "commentText">
+                  "Lorem ipsum dolor sit amet, consectetur a
+                </div>
+              </div>
+              
+
+             </div>
+           </div>
+          </div>
+        </section>
+
+
+
+        <footer>
+            <p>Jorge Arturo Méndez Vargas, A01176369. 2020</p>
+            <p>TC-2026 Web Applications Development</p>
+            
+        </footer>
+        <script src ="./../js/home.js" type = "text/javascript"></script>
+    </body>
+</html>

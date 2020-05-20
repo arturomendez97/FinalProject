@@ -44,7 +44,7 @@ section{
     background-size: 200% 100%;
 }
 
-.menu, .lowerMenu {
+.menu, .logOut, .lowerMenu {
     margin: 20px;
     cursor : pointer;
     height: 20px;
@@ -442,7 +442,7 @@ h3{
       background-size: 100% 100%;
     }
 
-    .menu, .lowerMenu{
+    .menu, .logOut, .lowerMenu{
         width: 5%;
     }
 
