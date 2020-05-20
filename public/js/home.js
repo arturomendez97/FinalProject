@@ -1,3 +1,4 @@
+
 let url = "/api/validate-user";
 let settings = {
     method : 'GET',
@@ -15,8 +16,7 @@ fetch( url, settings )
         throw new Error( response.statusText );
     })
     .then( responseJSON => {
-        //let greeting = document.querySelector( '.greeting' );
-        //greeting.innerHTML = `Welcome back ${responseJSON.firstName} ${responseJSON.lastName}!`;
+        //setProfile( responseJSON );
     })
     .catch( err => {
         console.log( err.message );
@@ -29,7 +29,7 @@ fetch( url, settings )
 
 function navigationBarEvent(){
     let navigationElements = document.getElementsByClassName("menu")
-    //console.log(navigationElements)
+    console.log(navigationElements)
 
     for (let i = 0; i < navigationElements.length; i++){
         navigationElements[i].addEventListener("click", (event) => {
@@ -45,6 +45,7 @@ function navigationBarEvent(){
 
             //event.target se usa para targetear al elemento al que se le hizo click.
             let currentElement = event.target.id;
+            console.log(currentElement)
             //También podría ser ("." + currentElement + "Section")
             let elementToShow = document.querySelector(`.${currentElement}Section`);
             //Mostrar al que se le hizo click
@@ -133,6 +134,18 @@ function watchLogoutButton(){
         localStorage.removeItem( 'token' );
         window.location.href = "../index.html";
     })
+}
+
+function setProfile( responseJSON ){
+
+    let profileSection = document.querySelector(".profileSection")
+
+    profileSection.innerHTML = `
+    <div class = "profile
+    <h1> ${responseJSON.username} </h1>
+    `;
+
+
 }
 
 function init(){

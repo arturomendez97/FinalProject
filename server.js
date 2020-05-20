@@ -120,7 +120,7 @@ app.post( '/api/users/login', jsonParser, ( req, res ) => {
                                 email : user.email
                             };
 
-                            jsonwebtoken.sign( userData, SECRET_TOKEN, { expiresIn : '5m' }, ( err, token ) => {
+                            jsonwebtoken.sign( userData, SECRET_TOKEN, { expiresIn : '15m' }, ( err, token ) => {
                                 if( err ){
                                     res.statusMessage = "Something went wrong with generating the token.";
                                     return res.status( 400 ).end();
