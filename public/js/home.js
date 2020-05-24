@@ -68,6 +68,12 @@ function validateUser(){
             setProfile( responseJSON );
             currentUserId = responseJSON._id;
             setArtworks();
+
+            let uploadForm = document.querySelector(".uploadArt");
+            uploadForm.innerHTML += `
+            <input type = "text" id = "user_id" class = "formElement hidden" name = "user_id" value = "${currentUserId}"/>
+            <input type = "text" id = "user_token" class = "formElement hidden" name = "user_token" value = "${localStorage.getItem( 'token' )}"/>
+            `
         })
         .catch( err => {
             console.log( err.message );
@@ -143,10 +149,11 @@ function setArtworks(){
         .then( artworks => {
             homeRecentGallery.innerHTML = ''
             for (k = 0; k< artworks.length; k++) {
+                console.log(artworks[k].path)
                 //PAra cuando ponga una imagen, a la imagen le puedo poner el id del artwork para encontrarlo despues
                 homeRecentGallery.innerHTML += `
                 <div class = "thumbnail" >
-                    <img src = "./../assets/1.png" height="238" width="238" alt= "Artwork" id = "${artworks[k]._id}">
+                    <img src = "./../${artworks[k].path}" height="238" width="238" alt= "Artwork" id = "${artworks[k]._id}">
                     </div>
                 `
             }
@@ -643,14 +650,16 @@ function watchUploadFOrm(){
 
     uploadForm.addEventListener( 'submit' , ( event ) => {
         event.preventDefault();
-        let name = document.getElementById( 'artworkName_Upload' ).value;
-        let description = document.getElementById( 'description_Upload' ).value;
+        window.location.href = "../index.html";
+
+        
 
         data = {
             name,
-            description
+            description,
+            image
         }
-
+        /*
         let url = "/api/create-artwork";
         let settings = {
             method : 'POST',
@@ -675,7 +684,7 @@ function watchUploadFOrm(){
             .catch( err => {
                 console.log( err.message );
                 window.location.href = "../index.html";
-            });
+            });*/
 
     })
 }
@@ -690,7 +699,7 @@ function init(){
     watchLogoutButton();
     //watchLikeFaveFollowBtns();
     watchCommentForm();
-    watchUploadFOrm();
+    //watchUploadFOrm();
 }
 
 init();

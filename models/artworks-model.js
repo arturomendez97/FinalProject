@@ -14,13 +14,16 @@ const artworkSchema = mongoose.Schema({
         type : String,
         required : true
     },
+    path : {
+        type : String,
+        required : true
+    },
     favorites: [{
         type: String
     }],
     likes: [{
         type: String
-    }]
-    //image
+    }],
 });
 
 const artworkModel = mongoose.model( 'artworks', artworkSchema );
@@ -60,6 +63,16 @@ const Artworks = {
     getArtworksByAuthorId : function( _id ){
         return artworkModel
                 .find( { author : _id } )
+                .then( artworks => {
+                    return artworks;
+                })
+                .catch( err => {
+                    throw new Error( err.message );
+                });
+    },
+    removeArtworkbyID : function( _id ){
+        return artworkModel
+                .deleteOne( { _id : _id } )
                 .then( artworks => {
                     return artworks;
                 })

@@ -1,10 +1,41 @@
 //All imports
 const express = require( 'express' );
+const multer = require( 'multer' );
+const path = require( 'path' );
 const mongoose = require( 'mongoose' );
 const morgan = require( 'morgan' );
 const bodyParser = require( 'body-parser' );
 const bcrypt = require ( 'bcryptjs' );
 const jsonwebtoken = require( 'jsonwebtoken' );
+
+//Set storage engine
+const storage = multer.diskStorage({
+    destination: './public/uploads/',
+    filename: function( req, file, cb){
+        cb( null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+    }
+});
+
+//Init upload
+const upload = multer({
+    storage: storage,
+    fileFilter: function(req, file, cb){
+        checkSubmissionAndUser(file, cb);
+    }
+}).single('image_Upload');
+
+function checkSubmissionAndUser( file, cb){
+    const filetypes = /jpeg|jpg|png/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+
+    if(mimetype && extname){
+        return cb(null, true);
+    }
+    else{
+        cb('Error: images only!');
+    }
+}
 
 //Config file import
 const { DATABASE_URL, PORT, SECRET_TOKEN } = require( './config' );
@@ -140,53 +171,77 @@ app.get('/api/artworks', (req, res) => {
 
 //Create artwork endpoint
 app.post( '/api/create-artwork', jsonParser, ( req, res ) => {
-    
-    const { sessiontoken } = req.headers;
-    jsonwebtoken.verify( sessiontoken, SECRET_TOKEN, ( err, decoded ) => {
+
+    //Upload image file
+    upload( req, res, ( err ) => {
         if( err ){
-            res.statusMessage = "Session expired!";
-            return res.status( 400 ).end();
-        }
+            res.statusMessage = `There was a problem with uploading the image`;
+            return res.status ( 404 ).end();
+        } else {
+            //console.log(req)
+            name = req.body.artworkName_Upload
+            description = req.body.description_Upload
+            user_id = req.body.user_id
+            sessiontoken = req.body.user_token
+            localPath = req.file.path
 
-       // Continue with the posting of the artwork
-       const { name, description } = req.body;
-
-        // Validations go here
-        if( !name || !description){
-            res.statusMessage = "Parameter missing in the body of the request.";
-            return res.status( 406 ).end();
-        }
-
-        Users
-            .getUserByEmail( decoded.email )
-            .then( user => {
-
-                if( !user ){
-                    res.statusMessage = `No Users with the email = ${decoded.email} were found on the list.`;
-                    return res.status ( 404 ).end();
-                }
-
-                const newArtwork = {
-                    name,
-                    author : user._id,
-                    description
-                }
-                
-                Artworks
-                    .addArtwork( newArtwork )
-                    .then( artwork => {
-                        return res.status( 201 ).json( artwork );
-                    })
-                    .catch( err => {
-                        res.statusMessage = err.message;
-                        return res.status( 400 ).end();
-                    });
-            })
-            .catch( err => {
-                res.statusMessage = err.message;
+            jsonwebtoken.verify( sessiontoken, SECRET_TOKEN, ( err, decoded ) => {
+            if( err ){
+                res.statusMessage = "Session expired!";
                 return res.status( 400 ).end();
+            }
+            
+
+            // Continue with the posting of the artwork
+        
+
+
+            // Validations go here
+            if( !name || !description){
+                res.statusMessage = "Parameter missing in the body of the request.";
+                return res.status( 406 ).end();
+            }
+            
+
+            Users
+                .getUserByID( user_id )
+                .then( user => {
+
+                    if( !user ){
+                        res.statusMessage = `No Users with the email = ${decoded.email} were found on the list.`;
+                        return res.status ( 404 ).end();
+                    }
+                    localPath = localPath.replace(/\\/g, "/");
+                    localPath = localPath.replace(/public/g, "");
+
+                    const newArtwork = {
+                        name,
+                        author : user._id,
+                        description,
+                        path : localPath
+                    }
+                    
+                    Artworks
+                        .addArtwork( newArtwork )
+                        .then( artwork => {
+                            return res.status( 201 ).json( artwork );
+                        })
+                        .catch( err => {
+                            res.statusMessage = err.message;
+                            return res.status( 400 ).end();
+                        });
+                })
+                .catch( err => {
+                    res.statusMessage = err.message;
+                    return res.status( 400 ).end();
+                });
             });
-        });
+        }
+    });
+
+
+    
+    
 })
 
 
@@ -232,6 +287,35 @@ app.get( '/api/get-artworkbyid', jsonParser, ( req, res ) => {
 
     Artworks
         .getArtworksByID( _id )
+        .then( result => {
+
+            if (result.length == 0){
+                res.statusMessage = `No artworks with the author = ${_id} were found on the list.`;
+                return res.status ( 404 ).end();
+            }
+
+            //Return status text and user parsed as a json object.
+            return res.status( 200 ).json( result );
+        })
+        .catch( err => {
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            //500 es el típico para cuando el server está abajo.
+            return res.status( 500 ).end();
+        });
+});
+
+//Delete artwork by artworkid
+app.delete( '/api/delete-artworkbyid', jsonParser, ( req, res ) => {
+
+    let _id = req.query._id;
+
+    if( !_id){
+        res.statusMessage = "Parameter missing in the body of the request.";
+        return res.status( 406 ).end();
+    }
+
+    Artworks
+        .removeArtworkbyID( _id )
         .then( result => {
 
             if (result.length == 0){

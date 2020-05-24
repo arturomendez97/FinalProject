@@ -313,10 +313,11 @@
 
         <section class = "addArtworkSection hidden">
           <div class = "cover">
-            <form class = "uploadArt">
+            <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+            <form action = '/api/create-artwork' class = "uploadArt" enctype = "multipart/form-data" method = "POST" target="dummyframe">
               <fieldset >
                   <h1 class = "logSignIn">Upload</h1>
-  
+                
                   <div class = "optionContainer">
                     <label for ="artworkName_Upload" class = "text">
                           Artwork Name 
@@ -335,7 +336,7 @@
                     <label for ="image_Upload" class = "text">
                           Image 
                     </label>
-                    <input type = "text" id = "image_Upload" class = "formElement" name = "image_Upload" placeholder="E.g. Image"/>
+                    <input type = "file" id = "image_Upload" class = "formElement" name = "image_Upload"/>
                   </div>
 
                   <div class = "Upload_Results">
