@@ -1,9 +1,13 @@
 const mongoose = require( 'mongoose' );
 
 const artworkSchema = mongoose.Schema({
+    name : {
+        type : String,
+        required : true
+    },
     author : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'Users',
+        ref : 'users',
         required : true
     },
     description : {
@@ -16,44 +20,53 @@ const artworkSchema = mongoose.Schema({
     likes: [{
         type: String
     }]
+    //image
 });
 
 const artworkModel = mongoose.model( 'artworks', artworkSchema );
 
 const Artworks = {
-    /*
-    addComment : function( newComment ){
-        return commentModel
-                .create( newComment )
-                .then( comment => {
-                    return comment;
+    addArtwork : function( newArtwork ){
+        return artworkModel
+                .create( newArtwork )
+                .then( artwork => {
+                    return artwork;
                 })
                 .catch( err => {
                     throw new Error( err.message );
                 });
     },
-    getAllComments : function(){
-        return commentModel
+    getAllArtworks : function(){
+        return artworkModel
                 .find()
-                .populate('user', ['username'] )
-                .then( comments => {
-                    return comments;
+                .populate('author', ['username'] )
+                .then( artworks => {
+                    return artworks;
                 })
                 .catch( err => {
                     throw new Error( err.message );
                 });
     },
-    getCommentsByAuthorId : function( id ){
-        return commentModel
-                .find( { author : id } )
-                .populate( 'user', ['username'] )
-                .then( comments => {
-                    return comments;
+    getArtworksByID : function( id ){
+        return artworkModel
+            .findOne( { _id : id } )
+                .then( artworks => {
+                    return artworks;
                 })
                 .catch( err => {
                     throw new Error( err.message );
                 });
-    }*/
+    },
+    getArtworksByAuthorId : function( _id ){
+        return artworkModel
+                .find( { author : _id } )
+                .then( artworks => {
+                    return artworks;
+                })
+                .catch( err => {
+                    throw new Error( err.message );
+                });
+    }
 }
 
 module.exports = {

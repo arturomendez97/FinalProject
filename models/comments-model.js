@@ -7,12 +7,12 @@ const commentSchema = mongoose.Schema({
     },
     author : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'Users',
+        ref : 'users',
         required : true
     },
     artwork : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'Users',
+        ref : 'artworks',
         required : true
     }
 });
@@ -33,7 +33,7 @@ const Comments = {
     getAllComments : function(){
         return commentModel
                 .find()
-                .populate('user', ['username'] )
+                .populate('author', 'username' )
                 .then( comments => {
                     return comments;
                 })
@@ -41,10 +41,10 @@ const Comments = {
                     throw new Error( err.message );
                 });
     },
-    getCommentsByAuthorId : function( id ){
+    getCommentsByArtworkId : function( id ){
         return commentModel
-                .find( { author : id } )
-                .populate( 'user', ['username'] )
+                .find( { artwork : id } )
+                .populate('author', 'username' )
                 .then( comments => {
                     return comments;
                 })

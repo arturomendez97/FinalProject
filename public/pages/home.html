@@ -41,16 +41,16 @@
         <a class="menu activeOption" id = "home">Home</a>
         <input class = "search" type="text" placeholder="Search...">
         <a class = "logOut" id = "logout">LogOut</a>
+        <a class="menu" id = "addArtwork">Upload</a>
         <a class="menu" id = "profile">Profile</a>
       </div> 
       
       <section class = "extraSection">
           <a class = "menu" id = "about">About us</a>
           <a class="menu" id = "external">External Links</a>
-
       </section>
-
-    
+      <section class = "addArtwork">
+      </section>
 
         <section class = "homeSection selectedSection">
             <div>
@@ -65,11 +65,9 @@
               </div> 
     
                 <section class = "gallery recentSection lowerSelectedSection">
-
+                  <!--
                     <div class = "thumbnail" >
                     <img src = "./../assets/1.png" height="238" width="238" alt= "Artwork">
-                      <!--<img src = "./assets/gradient.png" height="238" width="238" class = "img-top" alt= "Artwork">
-                      <h2 class = "img-top">User</h2>-->
                     </div>
 
                     <div class = "thumbnail">
@@ -98,21 +96,23 @@
                     </div>
                     <div class = "thumbnail">
                       <img src = "./../assets/3.png" height="238" width="238" alt= "Artwork">
-                    </div>
+                    </div>-->
                 </section>
 
               <section class = "gallery followingSection hidden">
-              
+              <!--
                 <div class = "thumbnail">
                   <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
-                </div>
+                </div>-->
               </section>
         </section>
         
         <section class = "profileSection hidden">
 
           <div class = "profileHeader">
-            <h1> Username </h1>
+            <h1 class = "profileUsername"> 
+              Username
+            </h1>
             <p class = "profileDescription">"Lorem ipsum dolor sit amet, consectetur adip eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." </p>
           </div>
 
@@ -122,7 +122,8 @@
 
               <div class = "profileGallery">
                 <h3 class = "greenBtmBdr"> User Gallery </h3>
-                <section class = "gallery">
+                <section class = "gallery galleryProfile">
+                  <!--
                   <div class = "thumbnail profileThumbnail">
                     <img src = "./../assets/2.png" height="238" width="238" alt= "Artwork">
                   </div>
@@ -141,6 +142,7 @@
                   <div class = "thumbnail profileThumbnail">
                     <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
                   </div>
+                  -->
                 </section>
                 
               </div>
@@ -179,19 +181,6 @@
                 <h3 class ="greenBtmBdr"> Following </h3>
 
                 <section class = "following">
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
-                  <p class = "followingText"> Username </p>
 
                 </section>
               </div>
@@ -282,25 +271,19 @@
             <h1 class = "usernametext">
               Username
             </h1>
-            <button class = "followBtn" type="button">Follow</button> 
+            <div class = "followBtnDiv">
+              
+            </div>
             
             
-            <p class = "profileDescription"> bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla blabla bla bla bla bla blabla bla bla bla bla bla </p>
-            <h1>
+            <p class = "userDescription">  </p>
+            <h1 class = "artworkName">
               Artwork name
             </h1>
             <div class = "btns">
-              <button class = "likeBtn" type="button">Like</button> 
-              <button class = "favBtn" type="button">Favorite</button> 
             </div>
-            <p>
-              Description
-            </p>
-            <p>
-              Like
-            </p>
-            <p>
-              Favorite
+            <p class = "artworkDescription">
+              
             </p>
            </div>
            <div class = "rightSide">
@@ -312,29 +295,58 @@
                </h3>
              <div class = "comments">
 
-              <div class = "comment"> 
-                <div class = "commentUser">
-                  Username
-                </div>
-                <div class = "commentText">
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                 ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi 
-                 ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                   deserunt mollit anim id est laborum."
-                </div>
-              </div>
-
-              <div class = "comment"> 
-                <div class = "commentUser">
-                  Username
-                </div>
-                <div class = "commentText">
-                  "Lorem ipsum dolor sit amet, consectetur a
-                </div>
-              </div>
+              
              </div>
+
+             <section class = "commentForm">
+              <h3> Add a Comment! </h3>
+              <form class = "commentForm">
+                <input type="text" class="inputComment" name="comment">
+                <button type = "submit" class = "clickable commentButton" id = "submitComment">
+                  Add Comment
+              </button>
+              </form>
+            </section>
            </div>
+          </div>
+        </section>
+
+        <section class = "addArtworkSection hidden">
+          <div class = "cover">
+            <form class = "uploadArt">
+              <fieldset >
+                  <h1 class = "logSignIn">Upload</h1>
+  
+                  <div class = "optionContainer">
+                    <label for ="artworkName_Upload" class = "text">
+                          Artwork Name 
+                    </label>
+                    <input type = "text" id = "artworkName_Upload" class = "formElement" name = "artworkName_Upload" placeholder="E.g. Sunset Study"/>
+                  </div>
+
+                  <div class = "optionContainer">
+                    <label for ="description_Upload" class = "text">
+                          Description 
+                    </label>
+                    <input type = "text" id = "description_Upload" class = "formElement" name = "description_Upload" placeholder="E.g. Plein air study done yesterday."/>
+                  </div>
+
+                  <div class = "optionContainer">
+                    <label for ="image_Upload" class = "text">
+                          Image 
+                    </label>
+                    <input type = "text" id = "image_Upload" class = "formElement" name = "image_Upload" placeholder="E.g. Image"/>
+                  </div>
+
+                  <div class = "Upload_Results">
+                  
+                  </div>
+  
+                  <button type = "submit" class = "clickable submit-btn">
+                      Submit
+                  </button>
+              </fieldset>
+          </form>
           </div>
         </section>
 

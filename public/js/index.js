@@ -1,11 +1,12 @@
 
-function userSignupFetch( username, email, password ){
+function userSignupFetch( username, email, password, description ){
     let url = '/api/users/register';
 
     let data = {
         username,
         email,
-        password
+        password,
+        description
     }
 
     let settings = {
@@ -87,8 +88,9 @@ function watchSignupForm(){
         let username = document.getElementById( 'username_Signup' ).value;
         let email = document.getElementById( 'email_Signup' ).value;
         let password = document.getElementById( 'password_Signup' ).value;
+        let description = document.getElementById( 'description_Signup' ).value;
 
-        userSignupFetch( username, email, password );
+        userSignupFetch( username, email, password, description );
     })
 }
 

@@ -66,6 +66,26 @@ const Users = {
                 .catch( err => {
                     throw new Error( err.message );
                 }); 
+    },
+    getUserByID: function( _id ){
+        return userModel
+                .findOne( { _id } )
+                .then( user => {
+                    return user;
+                })
+                .catch( err => {
+                    throw new Error( err.message );
+                }); 
+    },
+    updateFollowUser : function( user_id, newFollows ){
+        return userModel
+                .updateOne({ _id: user_id },{ $set : { follows : newFollows }})
+                .then( userUpdated => {
+                    return userUpdated;
+                })
+                .catch( err => {
+                    return err;
+                });
     }
 }
 

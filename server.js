@@ -22,6 +22,11 @@ app.use( cors );
 app.use( express.static( "public" ) );
 app.use( morgan( 'dev' ) );
 
+
+//                                      USER ENDPOINTS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //Get all users
 app.get('/api/users', (req, res) => {
     console.log("Getting the list of all users" );
@@ -36,6 +41,65 @@ app.get('/api/users', (req, res) => {
             return res.status( 500 ).end();
         });
 
+});
+
+//Get user by _id
+app.get( '/api/get-userby_id', jsonParser, ( req, res ) => {
+
+    let id = req.query._id;
+
+    if( !id){
+        res.statusMessage = "Parameter missing in the body of the request.";
+        return res.status( 406 ).end();
+    }
+
+    Users
+        .getUserByID( id )
+        .then( result => {
+
+            if (result.length == 0){
+                res.statusMessage = `No Users with the id = ${id} were found on the list.`;
+                return res.status ( 404 ).end();
+            }
+
+            //Return status text and user parsed as a json object.
+            return res.status( 200 ).json( result );
+        })
+        .catch( err => {
+            console.log(err)
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            //500 es el típico para cuando el server está abajo.
+            return res.status( 500 ).end();
+        });
+});
+
+//Get user by email
+app.get( '/api/get-user', jsonParser, ( req, res ) => {
+
+    let { email } = req.body;
+
+    if( !email){
+        res.statusMessage = "Parameter missing in the body of the request.";
+        return res.status( 406 ).end();
+    }
+
+    Users
+        .getUserByEmail( email )
+        .then( result => {
+
+            if (result.length == 0){
+                res.statusMessage = `No Users with the email = ${email} were found on the list.`;
+                return res.status ( 404 ).end();
+            }
+
+            //Return status text and user parsed as a json object.
+            return res.status( 200 ).json( result );
+        })
+        .catch( err => {
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            //500 es el típico para cuando el server está abajo.
+            return res.status( 500 ).end();
+        });
 });
 
 
@@ -53,8 +117,190 @@ app.get( '/api/validate-user', ( req, res ) => {
     });
 });
 
+//                                    ARTWORK ENDPOINTS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Get all artworks
+app.get('/api/artworks', (req, res) => {
+    console.log("Getting the list of all artworks" );
+
+    Artworks
+        .getAllArtworks()
+        .then( result => {
+            return res.status( 200 ).json( result );
+        })
+        .catch( err => {
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            return res.status( 500 ).end();
+        });
+
+});
+
+
+//Create artwork endpoint
+app.post( '/api/create-artwork', jsonParser, ( req, res ) => {
+    
+    const { sessiontoken } = req.headers;
+    jsonwebtoken.verify( sessiontoken, SECRET_TOKEN, ( err, decoded ) => {
+        if( err ){
+            res.statusMessage = "Session expired!";
+            return res.status( 400 ).end();
+        }
+
+       // Continue with the posting of the artwork
+       const { name, description } = req.body;
+
+        // Validations go here
+        if( !name || !description){
+            res.statusMessage = "Parameter missing in the body of the request.";
+            return res.status( 406 ).end();
+        }
+
+        Users
+            .getUserByEmail( decoded.email )
+            .then( user => {
+
+                if( !user ){
+                    res.statusMessage = `No Users with the email = ${decoded.email} were found on the list.`;
+                    return res.status ( 404 ).end();
+                }
+
+                const newArtwork = {
+                    name,
+                    author : user._id,
+                    description
+                }
+                
+                Artworks
+                    .addArtwork( newArtwork )
+                    .then( artwork => {
+                        return res.status( 201 ).json( artwork );
+                    })
+                    .catch( err => {
+                        res.statusMessage = err.message;
+                        return res.status( 400 ).end();
+                    });
+            })
+            .catch( err => {
+                res.statusMessage = err.message;
+                return res.status( 400 ).end();
+            });
+        });
+})
+
+
+//Get artworks by authorid
+app.get( '/api/get-artworksbyid', jsonParser, ( req, res ) => {
+
+    let _id = req.query._id;
+
+    if( !_id){
+        res.statusMessage = "Parameter missing in the body of the request.";
+        return res.status( 406 ).end();
+    }
+
+    Artworks
+        .getArtworksByAuthorId( _id )
+        .then( result => {
+
+            if (result.length == 0){
+                res.statusMessage = `No artworks with the author = ${_id} were found on the list.`;
+                return res.status ( 404 ).end();
+            }
+
+            //Return status text and user parsed as a json object.
+            return res.status( 200 ).json( result );
+        })
+        .catch( err => {
+            (console.log(err))
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            //500 es el típico para cuando el server está abajo.
+            return res.status( 500 ).end();
+        });
+});
+
+//Get artworks by artwork _id
+app.get( '/api/get-artworkbyid', jsonParser, ( req, res ) => {
+
+    let _id = req.query._id;
+
+    if( !_id){
+        res.statusMessage = "Parameter missing in the body of the request.";
+        return res.status( 406 ).end();
+    }
+
+    Artworks
+        .getArtworksByID( _id )
+        .then( result => {
+
+            if (result.length == 0){
+                res.statusMessage = `No artworks with the author = ${_id} were found on the list.`;
+                return res.status ( 404 ).end();
+            }
+
+            //Return status text and user parsed as a json object.
+            return res.status( 200 ).json( result );
+        })
+        .catch( err => {
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            //500 es el típico para cuando el server está abajo.
+            return res.status( 500 ).end();
+        });
+});
+
+//                                    COMMENT ENDPOINTS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Get all comments
+app.get('/api/comments', (req, res) => {
+    console.log("Getting the list of all comments" );
+
+    Comments
+        .getAllComments()
+        .then( result => {
+            return res.status( 200 ).json( result );
+        })
+        .catch( err => {
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            return res.status( 500 ).end();
+        });
+
+});
+
+//Get comments by artworkid
+app.get( '/api/get-commentsbyArtwork', jsonParser, ( req, res ) => {
+
+    let _id = req.query._id;
+
+    if( !_id){
+        res.statusMessage = "Parameter missing in the body of the request.";
+        return res.status( 406 ).end();
+    }
+
+    Comments
+        .getCommentsByArtworkId( _id )
+        .then( result => {
+
+            if (result.length == 0){
+                res.statusMessage = `No comments with the artwork = ${_id} were found on the list.`;
+                return res.status ( 404 ).end();
+            }
+
+            //Return status text and user parsed as a json object.
+            return res.status( 200 ).json( result );
+        })
+        .catch( err => {
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            //500 es el típico para cuando el server está abajo.
+            return res.status( 500 ).end();
+        });
+});
+
 //Create comment endpoint
 app.post( '/api/create-comment', jsonParser, ( req, res ) => {
+
     
     const { sessiontoken } = req.headers;
     jsonwebtoken.verify( sessiontoken, SECRET_TOKEN, ( err, decoded ) => {
@@ -64,21 +310,27 @@ app.post( '/api/create-comment', jsonParser, ( req, res ) => {
         }
 
        // Continue with the posting of the comment
-       const { content } = req.body;
+       const { content, artwork_id } = req.body;
 
         // Validations go here
+        if( !content || !artwork_id){
+            res.statusMessage = "Parameter missing in the body of the request.";
+            return res.status( 406 ).end();
+        }
 
         Users
             .getUserByEmail( decoded.email )
             .then( user => {
 
                 if( !user ){
-                    // Validation needed here
+                    res.statusMessage = `No Users with the email = ${decoded.email} were found on the list.`;
+                    return res.status ( 404 ).end();
                 }
 
                 const newComment = {
                     content,
-                    author : user._id
+                    author : user._id,
+                    artwork : artwork_id
                 }
                 
                 Comments
@@ -97,6 +349,11 @@ app.post( '/api/create-comment', jsonParser, ( req, res ) => {
             });
         });
 })
+
+
+//                                 LOGIN AND SIGNUP ENDPOINTS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Login endpoint
 app.post( '/api/users/login', jsonParser, ( req, res ) => {
@@ -117,7 +374,13 @@ app.post( '/api/users/login', jsonParser, ( req, res ) => {
                         if( result ){
                             let userData = {
                                 username : user.username,
-                                email : user.email
+                                email : user.email,
+                                description : user.description,
+                                follows : user.follows,
+                                followers : user.followers,
+                                favorites : user.favorites,
+                                likes : user.likes,
+                                _id : user._id
                             };
 
                             jsonwebtoken.sign( userData, SECRET_TOKEN, { expiresIn : '15m' }, ( err, token ) => {
@@ -138,7 +401,7 @@ app.post( '/api/users/login', jsonParser, ( req, res ) => {
                     });
             }
             else{
-                throw new Error( "User doesn't exists!" );
+                throw new Error( "User doesn't exist!" );
             }
         })
         .catch( err => {
@@ -147,11 +410,12 @@ app.post( '/api/users/login', jsonParser, ( req, res ) => {
         });
 });
 
+
 //Create a user endpoint
 app.post( '/api/users/register', jsonParser, ( req, res ) => {
-    let {username, email, password} = req.body;
+    let {username, email, password, description} = req.body;
 
-    if( !username || !email || !password ){
+    if( !username || !email || !password || !description){
         res.statusMessage = "Parameter missing in the body of the request.";
         return res.status( 406 ).end();
     }
@@ -161,7 +425,8 @@ app.post( '/api/users/register', jsonParser, ( req, res ) => {
             let newUser = { 
                 username, 
                 password : hashedPassword, 
-                email 
+                email,
+                description
             };
 
             Users
@@ -179,6 +444,77 @@ app.post( '/api/users/register', jsonParser, ( req, res ) => {
             return res.status( 400 ).end();
         });
 });
+
+//                                 FOLLOW ENDPOINTS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.patch( '/api/users/updatefollow', jsonParser, ( req, res ) =>{
+    const { sessiontoken } = req.headers;
+
+    jsonwebtoken.verify( sessiontoken, SECRET_TOKEN, ( err, decoded ) => {
+        if( err ){
+            res.statusMessage = "Session expired!";
+            return res.status( 400 ).end();
+        }
+
+        //If modify is 1, we add the user, if its -1, we delete the user from the follows
+        let { user_id, followUser, modify} = req.body;
+
+        if( !user_id || !followUser || !modify ){
+            res.statusMessage = "Parameter missing in the body of the request.";
+            return res.status( 406 ).end();
+        }
+
+        Users
+        .getUserByID( user_id )
+        .then( result => {
+
+            if (result.length == 0){
+                res.statusMessage = `No Users with the id = ${id} were found on the list.`;
+                return res.status ( 404 ).end();
+            }
+
+            if(modify === 1){
+                newFollows = result.follows;
+                newFollows.push(followUser);
+            }
+            else{
+                var newFollows =  result.follows.filter(function(follow) {
+                    return follow != followUser;
+                });
+            }
+
+            Users
+                .updateFollowUser( user_id , newFollows )
+                .then( result => {
+
+                    if ( result.n == 0 ){
+                        console.log(result)
+                        res.statusMessage = "The user was not modified";
+                        return res.status( 404 ).end()
+                    }
+                    else{
+                        
+                        return res.status( 202 ).json( result );
+                    }
+                })
+                .catch( err => {
+                    res.statusMessage = "Something is wrong with the database, try again later.";
+                    return res.status( 500 ).end();
+                });
+        })
+        .catch( err => {
+
+            console.log(err)
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            //500 es el típico para cuando el server está abajo.
+            return res.status( 500 ).end();
+        });
+    });
+})
+
+
 
 app.listen( PORT, () =>{
     console.log( "This server is running on port 8080" );

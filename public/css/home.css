@@ -30,7 +30,7 @@ section{
   border-radius: 5%;
 }
 
-.profileDescription{
+.profileDescription, .artworkDescription, .userDescription{
   width: 300px;
 }
 
@@ -91,8 +91,9 @@ section{
     border-bottom : 1px solid #37403e;
   }
 
-.gallery{
+.gallery, .followBtnDiv{
     justify-content: center;
+    display: flex;
   }
 
   
@@ -167,7 +168,7 @@ section{
   }
 
 
-.submit-btn, .followBtn, .likeBtn, .favBtn{
+.submit-btn, .followBtn, .likeBtn, .favBtn, .commentButton{
     background-color : #2F9C95;
     cursor: pointer;
     font-size: 17px;
@@ -179,6 +180,18 @@ section{
 .usernametext{
   color : #44cf6c
 }
+
+#addArtwork{
+  background-color : #2F9C95;
+  color: lightgray;
+  justify-content: center;
+  height: 25px;
+  color : white;
+  border : 0;
+  border-radius : 7px;
+  text-align : center;
+}
+
 
 .followBtn{
   justify-content: center;
@@ -198,6 +211,18 @@ section{
   border : 0;
   border-radius : 7px;
   text-align : center;
+  height: 30px;
+  width: 30%;
+}
+
+.commentButton{
+  justify-content: center;
+  color : white;
+  border : 0;
+  border-radius : 7px;
+  text-align : center;
+  width: 10%;
+  height: 40px;
 }
 
 
@@ -206,9 +231,10 @@ section{
   justify-content: space-evenly;
 }
 
-.submit-btn:hover, .followBtn:hover, .likeBtn:hover, .favBtn:hover{
+.submit-btn:hover, .followBtn:hover, .likeBtn:hover, .favBtn:hover, #addArtwork:hover, .commentButton:hover{
     background-color : #44cf6c;
 }
+
 
 
 
@@ -402,10 +428,10 @@ h3{
 }
 
 .comments{
-  margin-bottom: 100px; 
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: 50px;
 }
 
 .commentUser{
@@ -417,6 +443,26 @@ h3{
   text-align: left;
 }
 
+.commentForm{
+  display: flex;
+  flex-direction: column;
+  width: auto;
+}
+
+
+.inputComment{
+  color: white;
+  font-size: 17px;
+  padding : 25px;
+  background-color: #37403e;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
+  border: none;
+}
+
 .comment{
   display: flex;
   flex-direction: row;
@@ -424,9 +470,11 @@ h3{
   justify-content: center;
   align-items: center;
   border-radius: 10px;
-  margin-bottom: 50px;
   margin : 50px;
+  margin-bottom: 0px;
 }
+
+
 
 .commentText{
   color: white;
