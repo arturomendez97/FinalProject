@@ -143,7 +143,7 @@ app.get( '/api/validate-user', ( req, res ) => {
             res.statusMessage = "Session expired!";
             return res.status( 400 ).end();
         }
-
+        console.log(decoded)
         return res.status( 200 ).json( decoded );
     });
 });
@@ -259,10 +259,11 @@ app.get( '/api/get-artworksbyid', jsonParser, ( req, res ) => {
         .getArtworksByAuthorId( _id )
         .then( result => {
 
-            if (result.length == 0){
+            //Hide this validation because if there's 0 artworks for this user we still want this endpoint to return succesfull, as we'll display 0 artworks.
+            /*if (result.length == 0){
                 res.statusMessage = `No artworks with the author = ${_id} were found on the list.`;
                 return res.status ( 404 ).end();
-            }
+            }*/
 
             //Return status text and user parsed as a json object.
             return res.status( 200 ).json( result );
@@ -298,6 +299,7 @@ app.get( '/api/get-artworkbyid', jsonParser, ( req, res ) => {
             return res.status( 200 ).json( result );
         })
         .catch( err => {
+            console.log(err)
             res.statusMessage = "Something is wrong with the database, try again later.";
             //500 es el típico para cuando el server está abajo.
             return res.status( 500 ).end();
@@ -571,6 +573,144 @@ app.patch( '/api/users/updatefollow', jsonParser, ( req, res ) =>{
 
             Users
                 .updateFollowUser( user_id , newFollows )
+                .then( result => {
+
+                    if ( result.n == 0 ){
+                        console.log(result)
+                        res.statusMessage = "The user was not modified";
+                        return res.status( 404 ).end()
+                    }
+                    else{
+                        
+                        return res.status( 202 ).json( result );
+                    }
+                })
+                .catch( err => {
+                    res.statusMessage = "Something is wrong with the database, try again later.";
+                    return res.status( 500 ).end();
+                });
+        })
+        .catch( err => {
+
+            console.log(err)
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            //500 es el típico para cuando el server está abajo.
+            return res.status( 500 ).end();
+        });
+    });
+})
+
+//                                 LIKE ENDPOINTS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.patch( '/api/users/updatelike', jsonParser, ( req, res ) =>{
+    const { sessiontoken } = req.headers;
+
+    jsonwebtoken.verify( sessiontoken, SECRET_TOKEN, ( err, decoded ) => {
+        if( err ){
+            res.statusMessage = "Session expired!";
+            return res.status( 400 ).end();
+        }
+
+        //If modify is 1, we add the artwork, if its -1, we delete the artwork from the likes
+        let { user_id, artwork_id, modify} = req.body;
+
+        if( !user_id || !artwork_id || !modify ){
+            res.statusMessage = "Parameter missing in the body of the request.";
+            return res.status( 406 ).end();
+        }
+
+        Users
+        .getUserByID( user_id )
+        .then( result => {
+
+            if (result.length == 0){
+                res.statusMessage = `No Users with the id = ${id} were found on the list.`;
+                return res.status ( 404 ).end();
+            }
+
+            if(modify === 1){
+                newLikes = result.likes;
+                newLikes.push(artwork_id);
+            }
+            else{
+                var newLikes =  result.likes.filter(function(like) {
+                    return like != artwork_id;
+                });
+            }
+
+            Users
+                .updateLikeUser( user_id , newLikes )
+                .then( result => {
+
+                    if ( result.n == 0 ){
+                        console.log(result)
+                        res.statusMessage = "The user was not modified";
+                        return res.status( 404 ).end()
+                    }
+                    else{
+                        
+                        return res.status( 202 ).json( result );
+                    }
+                })
+                .catch( err => {
+                    res.statusMessage = "Something is wrong with the database, try again later.";
+                    return res.status( 500 ).end();
+                });
+        })
+        .catch( err => {
+
+            console.log(err)
+            res.statusMessage = "Something is wrong with the database, try again later.";
+            //500 es el típico para cuando el server está abajo.
+            return res.status( 500 ).end();
+        });
+    });
+})
+
+//                                 FAVORITE ENDPOINTS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.patch( '/api/users/updatefavorite', jsonParser, ( req, res ) =>{
+    const { sessiontoken } = req.headers;
+
+    jsonwebtoken.verify( sessiontoken, SECRET_TOKEN, ( err, decoded ) => {
+        if( err ){
+            res.statusMessage = "Session expired!";
+            return res.status( 400 ).end();
+        }
+
+        //If modify is 1, we add the artwork, if its -1, we delete the artwork from the likes
+        let { user_id, artwork_id, modify} = req.body;
+
+        if( !user_id || !artwork_id || !modify ){
+            res.statusMessage = "Parameter missing in the body of the request.";
+            return res.status( 406 ).end();
+        }
+
+        Users
+        .getUserByID( user_id )
+        .then( result => {
+
+            if (result.length == 0){
+                res.statusMessage = `No Users with the id = ${id} were found on the list.`;
+                return res.status ( 404 ).end();
+            }
+
+            if(modify === 1){
+                newFavs = result.favorites;
+                newFavs.push(artwork_id);
+            }
+            else{
+                var newFavs =  result.favorites.filter(function(fav) {
+                    return fav != artwork_id;
+                });
+            }
+
+            Users
+                .updateFavUser( user_id , newFavs )
                 .then( result => {
 
                     if ( result.n == 0 ){

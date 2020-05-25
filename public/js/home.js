@@ -65,15 +65,35 @@ function validateUser(){
             throw new Error( response.statusText );
         })
         .then( responseJSON => {
-            setProfile( responseJSON );
             currentUserId = responseJSON._id;
-            setArtworks();
+            let url = `/api/get-userby_id?_id=${currentUserId}`;
 
-            let uploadForm = document.querySelector(".uploadArt");
-            uploadForm.innerHTML += `
-            <input type = "text" id = "user_id" class = "formElement hidden" name = "user_id" value = "${currentUserId}"/>
-            <input type = "text" id = "user_token" class = "formElement hidden" name = "user_token" value = "${localStorage.getItem( 'token' )}"/>
-            `
+            let settings = {
+                method : 'GET'
+            }
+
+            fetch( url, settings )
+                .then( response => {
+                    if( response.ok ){
+                        return response.json();
+                    }
+                    throw new Error( response.statusText );
+                })
+                .then( userJSON => {
+
+                    setProfile( userJSON );
+                    setArtworks();
+
+                    let uploadForm = document.querySelector(".uploadArt");
+                    uploadForm.innerHTML += `
+                    <input type = "text" id = "user_id" class = "formElement hidden" name = "user_id" value = "${currentUserId}"/>
+                    <input type = "text" id = "user_token" class = "formElement hidden" name = "user_token" value = "${localStorage.getItem( 'token' )}"/>
+                    `
+                    
+                })
+                .catch( err => {
+                    console.log( err.message );
+                });
         })
         .catch( err => {
             console.log( err.message );
@@ -88,6 +108,8 @@ function setProfile( responseJSON ){
     let profileDescription = document.querySelector(".profileDescription");
     let profileFollows = document.querySelector(".following");
     let galleryProfile = document.querySelector(".galleryProfile");
+    let profileLikes = document.querySelector(".likesGalleryProfile");
+    let profileFavs = document.querySelector(".FavsGalleryProfile");
 
     //Get artworks by user id
     let url = `/api/get-artworksbyid?_id=${responseJSON._id}`;
@@ -106,8 +128,8 @@ function setProfile( responseJSON ){
             for (k = 0; k< userArtworks.length; k++) {
                 //PAra cuando ponga una imagen, a la imagen le puedo poner el id del artwork para encontrarlo despues
                 galleryProfile.innerHTML += `
-                <div class = "thumbnail" >
-                    <img src = "./../assets/1.png" height="238" width="238" alt= "Artwork" id = "${userArtworks[k]._id}">
+                <div class = "profileThumbnail" >
+                    <img src = "./../${userArtworks[k].path}" height="238" width="238" alt= "Artwork" id = "${userArtworks[k]._id}">
                     </div>
                 `
             }
@@ -115,19 +137,128 @@ function setProfile( responseJSON ){
             //Set following
             profileFollows.innerHTML = ''
             for (i = 0; i < responseJSON.follows.length; i++) {
-                profileFollows.innerHTML += `
-                <p class = "followingText"> ${responseJSON.follows[i]} </p>
-                `
-            } 
-            
+                
+                let url = `/api/get-userby_id?_id=${responseJSON.follows[i]}`;
 
+                let settings = {
+                    method : 'GET'
+                }
+
+                fetch( url, settings )
+                    .then( response => {
+                        if( response.ok ){
+                            return response.json();
+                        }
+                        throw new Error( response.statusText );
+                    })
+                    .then( extUserJSON => {
+                        //console.log(extUserJSON)
+                        profileFollows.innerHTML += `
+                        <h1 id = "externalUserProfile" name = "${extUserJSON._id}"> ${extUserJSON.username} </h1>
+                        `
+                    })
+                    .catch( err => {
+                        console.log( err.message );
+                    });
+                
+            } 
             profileUsername.innerHTML = `${responseJSON.username}`;
             profileDescription.innerHTML = `${responseJSON.description}`;
+
+            //Set likes
+            //Get each artwork by id and put it there
+            profileLikes.innerHTML = ''
+            profileFavs.innerHTML = ''
+            for (j = 0; j< responseJSON.likes.length; j++){
+
+                //Fetchear artworks de likes
+                let url = `/api/get-artworkbyid?_id=${responseJSON.likes[j]}`;
+
+                let settings = {
+                    method : 'GET'
+                }
+                fetch( url, settings )
+                    .then( response => {
+                        if( response.ok ){
+                            return response.json();
+                        }
+                        throw new Error( response.statusText );
+                    })
+                    .then( responseJSON => {
+                        profileLikes.innerHTML = `
+                        <div class = "profileThumbnail" >
+                            <img src = "./../${responseJSON.path}" height="238" width="238" alt= "Artwork" id = "${responseJSON._id}">
+                            </div>
+                        `
+                    })
+                    .catch( err => {
+                        console.log( err.message );
+                    });
+            }
+
+            //Fetchear artworks de favs
+            for (j = 0; j< responseJSON.favorites.length; j++){
+                let url2 = `/api/get-artworkbyid?_id=${responseJSON.favorites[j]}`;
+
+                let settings2 = {
+                    method : 'GET'
+                }
+                fetch( url2, settings2 )
+                    .then( response => {
+                        if( response.ok ){
+                            return response.json();
+                        }
+                        throw new Error( response.statusText );
+                    })
+                    .then( responseJSON => {
+                        profileFavs.innerHTML = `
+                        <div class = "profileThumbnail" >
+                            <img src = "./../${responseJSON.path}" height="238" width="238" alt= "Artwork" id = "${responseJSON._id}">
+                            </div>
+                        `
+                    })
+                    .catch( err => {
+                        console.log( err.message );
+                    });
+            }
+
         })
         .catch( err => {
             console.log( err.message );
         });
 
+}
+
+function setSearchGallery( searchTerm ){
+    let searchGallery = document.querySelector(".searchSection")
+
+    //Get all artworks for homepage
+    let url = '/api/artworks';
+    let settings = {
+        method : 'GET'
+    }
+    fetch( url, settings )
+        .then( response => {
+            if( response.ok ){
+                return response.json();
+            }
+            throw new Error( response.statusText );
+        })
+        .then( artworks => {
+            searchGallery.innerHTML = ''
+            for (k = 0; k< artworks.length; k++) {
+                if (artworks[k].name.includes( searchTerm ) || artworks[k].description.includes( searchTerm ) || artworks[k].author.username.includes( searchTerm )){
+                    searchGallery.innerHTML += `
+                    <div class = "thumbnail" >
+                        <img src = "./../${artworks[k].path}" height="238" width="238" alt= "Artwork" id = "${artworks[k]._id}">
+                        </div>
+                    `
+                }
+            }
+        })
+        .catch( err => {
+            console.log( err.message );
+        });
 }
 
 function setArtworks(){
@@ -149,7 +280,7 @@ function setArtworks(){
         .then( artworks => {
             homeRecentGallery.innerHTML = ''
             for (k = 0; k< artworks.length; k++) {
-                console.log(artworks[k].path)
+                //console.log(artworks[k].path)
                 //PAra cuando ponga una imagen, a la imagen le puedo poner el id del artwork para encontrarlo despues
                 homeRecentGallery.innerHTML += `
                 <div class = "thumbnail" >
@@ -175,6 +306,7 @@ function setArtworks(){
             })
             .then( responseJSON => {
 
+                homeFollowingGallery.innerHTML = ''
                 //For all the profile's follows
                 for (k = 0; k< responseJSON.follows.length; k++){
                     //For each of them, get and display all their art
@@ -191,11 +323,10 @@ function setArtworks(){
                             throw new Error( response.statusText );
                         })
                         .then( artworks => {
-                            homeFollowingGallery.innerHTML = ''
                             for (i = 0; i < artworks.length; i++){
                                 homeFollowingGallery.innerHTML += `
                                 <div class = "thumbnail" >
-                                    <img src = "./../assets/1.png" height="238" width="238" alt= "Artwork" id = "${artworks[i]._id}">
+                                    <img src = "./../${artworks[i].path}" height="238" width="238" alt= "Artwork" id = "${artworks[i]._id}">
                                     </div>
                                 `
                             }
@@ -232,6 +363,34 @@ function navigationBarEvent(){
 
             //event.target se usa para targetear al elemento al que se le hizo click.
             let currentElement = event.target.id;
+
+            //Caso específico para cuando le das click al nombre del usuario en un artwork. Para no repetir el id
+            if (currentElement == "externalUserProfile"){
+                currentElement = "profile"
+            }
+
+            //Para cuando andas en el profile de alguién mas pero le das click al button profile, para que se muestre el tuyo de nuevo
+            if (currentElement == "profile"){
+                let url = `/api/get-userby_id?_id=${currentUserId}`;
+
+                let settings = {
+                    method : 'GET'
+                }
+
+                fetch( url, settings )
+                    .then( response => {
+                        if( response.ok ){
+                            return response.json();
+                        }
+                        throw new Error( response.statusText );
+                    })
+                    .then( responseJSON => {
+                        setProfile(responseJSON);
+                    })
+                    .catch( err => {
+                        console.log( err.message );
+                    });
+            }
             //También podría ser ("." + currentElement + "Section")
             let elementToShow = document.querySelector(`.${currentElement}Section`);
             //Mostrar al que se le hizo click
@@ -248,7 +407,54 @@ function navigationBarEvent(){
 
 }
 
+function searchEvent(){
+    let searchForm = document.querySelector(".searchForm")
+    console.log("The term searche");
+
+
+    
+    searchForm.addEventListener('submit', () => {
+        event.preventDefault()
+        let search = document.querySelector(".search").value
+        
+        //Esconde la que está desplegada actualmente.
+        let lowerSelectedSection = document.querySelector(".lowerSelectedSection");
+        lowerSelectedSection.classList.add("hidden");
+        lowerSelectedSection.classList.remove("lowerSelectedSection");
+        //Esconde la que está desplegada actualmente.
+        let selectedSection = document.querySelector(".selectedSection");
+        selectedSection.classList.add("hidden");
+        selectedSection.classList.remove("selectedSection");
+
+        //Quitar lo gris del menu de arriba
+        let loweSelectedMenu = document.querySelector(".lowerActiveOption");
+        loweSelectedMenu.classList.remove("lowerActiveOption");
+        //Quitar lo gris del menu de arriba
+        let selectedMenu = document.querySelector(".activeOption");
+        selectedMenu.classList.remove("activeOption");
+
+        //También podría ser ("." + currentElement + "Section")
+        let lowerElementToShow = document.querySelector('.searchSection');
+        //Mostrar al que se le hizo click
+        lowerElementToShow.classList.remove("hidden");
+        lowerElementToShow.classList.add("lowerSelectedSection");
+        lowerElementToShow.classList.add("lowerActiveOption");
+        //También podría ser ("." + currentElement + "Section")
+        let elementToShow = document.querySelector('.homeSection');
+        //Mostrar al que se le hizo click
+        elementToShow.classList.remove("hidden");
+        elementToShow.classList.add("selectedSection");
+        elementToShow.classList.add("activeOption");
+
+        
+
+
+        setSearchGallery( search )
+       })
+}
+
 function lowerNavigationBarEvent(){
+
     let navigationElements = document.getElementsByClassName("lowerMenu")
 
     for (let i = 0; i < navigationElements.length; i++){
@@ -370,21 +576,33 @@ function artworkPageEvent(){
 
                                         //Checa si el usuario ya le da follow a este otro usuario para que el boton diga follow o unfollow
                                         if (currentUserJSON.follows.includes(responseJSON._id)){
-                                            btns.innerHTML = `
-                                            <button class = "likeBtn" type="button" name = "${artwork._id}">Un-Like</button> 
-                                            <button class = "favBtn" type="button" name = "${artwork._id}">Un-Favorite</button> 
-                                            `
                                             followBtnDiv.innerHTML = `
                                             <button class = "followBtn" type="button" id = "${responseJSON._id}">Un-Follow</button> 
                                             `
                                         }
                                         else{
-                                            btns.innerHTML = `
-                                            <button class = "likeBtn" type="button" name = "${artwork._id}">Like</button> 
-                                            <button class = "favBtn" type="button" name = "${artwork._id}">Favorite</button> 
-                                            `
                                             followBtnDiv.innerHTML = `
                                             <button class = "followBtn" type="button" id = "${responseJSON._id}">Follow</button> 
+                                            `
+                                        }
+                                        //same pero con like
+                                        if (currentUserJSON.likes.includes(artwork._id)){
+                                            btns.innerHTML = `
+                                            <button class = "likeBtn" type="button" name = "${artwork._id}">Un-Like</button> `
+                                        }
+                                        else{
+                                            btns.innerHTML = `
+                                            <button class = "likeBtn" type="button" name = "${artwork._id}">Like</button> `
+                                        }
+                                        //Same pero con fav
+                                        if (currentUserJSON.favorites.includes(artwork._id)){
+                                            btns.innerHTML += `
+                                            <button class = "favBtn" type="button" name = "${artwork._id}">Un-Favorite</button> 
+                                            `
+                                        }
+                                        else{
+                                            btns.innerHTML += `
+                                            <button class = "favBtn" type="button" name = "${artwork._id}">Favorite</button> 
                                             `
                                         }
 
@@ -403,6 +621,7 @@ function artworkPageEvent(){
                                     
         
                                     usernameText.innerHTML = `${responseJSON.username}`
+                                    usernameText.name = responseJSON._id
                                     userDescription.innerHTML = `${responseJSON.description}`
         
                                     //Ahora obtenemos todos los comentarios para este artwork.
@@ -458,6 +677,39 @@ function artworkPageEvent(){
 
 
         });
+    }
+}
+
+function watchArtworkUser(){
+    let artworkUser = document.getElementsByClassName("userLink")
+    //console.log(artworkUser)
+
+    for(i=0;i<artworkUser.length;i++){
+        artworkUser[i].addEventListener( 'click' , ( event ) =>{
+            if (event.target.id = "externalUserProfile"){
+                //Get user by id and pass it to setprofile.
+            let url = `/api/get-userby_id?_id=${event.target.getAttribute("name")}`;
+            console.log(event.target)
+    
+            let settings = {
+                method : 'GET'
+            }
+    
+            fetch( url, settings )
+                .then( response => {
+                    if( response.ok ){
+                        return response.json();
+                    }
+                    throw new Error( response.statusText );
+                })
+                .then( responseJSON => {
+                    setProfile(responseJSON)
+                })
+                .catch( err => {
+                    console.log( err.message );
+                });
+            }
+        })
     }
 }
 
@@ -558,7 +810,7 @@ function watchLikeFaveFollowBtns(){
     //let btnsContainer = document.querySelector( '.artworkContainer' );
     let likeBtn = document.querySelector( ".likeBtn");
     let followBtn = document.querySelector( ".followBtn");
-    let FavButton = document.querySelector( ".favBtn");
+    let favBtn = document.querySelector( ".favBtn");
 
         
     followBtn.addEventListener( 'click', ( event ) =>{
@@ -569,29 +821,26 @@ function watchLikeFaveFollowBtns(){
         else{
             updateFollow(followBtn, 1)
         }
+    })
 
-        let url = `/api/get-userby_id?_id=${currentUserId}`;
-
-        let settings = {
-            method : 'GET'
+    likeBtn.addEventListener( 'click', ( event ) =>{
+        //If -1 delete like, if 1, add like
+        if( likeBtn.innerHTML == "Un-Like"){
+            updateLike(likeBtn, -1)
         }
+        else{
+            updateLike(likeBtn, 1)
+        }
+    })
 
-        fetch( url, settings )
-            .then( response => {
-                if( response.ok ){
-                    return response.json();
-                }
-                throw new Error( response.statusText );
-            })
-            .then( responseJSON => {
-                setProfile( responseJSON );
-                setArtworks();
-
-            })
-            .catch( err => {
-                console.log( err.message );
-            });
-
+    favBtn.addEventListener( 'click', ( event ) =>{
+        //If -1 delete like, if 1, add like
+        if( favBtn.innerHTML == "Un-Favorite"){
+            updateFavorite(favBtn, -1)
+        }
+        else{
+            updateFavorite(favBtn, 1)
+        }
     })
 
 }
@@ -628,6 +877,147 @@ function updateFollow(followBtn, modify){
             else{
                 followBtn.innerHTML = "Follow"
             }
+            let url2 = `/api/get-userby_id?_id=${currentUserId}`;
+
+            let settings2 = {
+                method : 'GET'
+            }
+
+            fetch( url2, settings2 )
+                .then( response => {
+                    if( response.ok ){
+                        return response.json();
+                    }
+                    throw new Error( response.statusText );
+                })
+                .then( responseJSON => {
+                    setProfile( responseJSON );
+                    setArtworks();
+
+                })
+                .catch( err => {
+                    console.log( err.message );
+                });
+
+        })
+        .catch( err => {
+            console.log( err.message );
+        });
+}
+
+function updateLike(likeBtn, modify){
+    let url = "/api/users/updatelike";
+
+        let data = {
+            user_id : currentUserId,
+            artwork_id : likeBtn.name,
+            modify
+        }
+
+        let settings = {
+        method : 'PATCH',
+        headers : {
+            sessiontoken : localStorage.getItem( 'token' ),
+            'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify( data )
+        };
+
+        fetch( url, settings )
+        .then( response => {
+            if( response.ok ){
+                return response.json();
+            }
+            throw new Error( response.statusText );
+        })
+        .then( responseJSON => {
+            if (modify == 1){
+                likeBtn.innerHTML = "Un-Like"
+            }
+            else{
+                likeBtn.innerHTML = "Like"
+            }
+            let url2 = `/api/get-userby_id?_id=${currentUserId}`;
+
+            let settings2 = {
+                method : 'GET'
+            }
+
+            fetch( url2, settings2 )
+                .then( response => {
+                    if( response.ok ){
+                        return response.json();
+                    }
+                    throw new Error( response.statusText );
+                })
+                .then( responseJSON => {
+                    setProfile( responseJSON );
+                    setArtworks();
+
+                })
+                .catch( err => {
+                    console.log( err.message );
+                });
+
+        })
+        .catch( err => {
+            console.log( err.message );
+        });
+}
+
+function updateFavorite(favBtn, modify){
+    let url = "/api/users/updatefavorite";
+
+        let data = {
+            user_id : currentUserId,
+            artwork_id : favBtn.name,
+            modify
+        }
+
+        let settings = {
+        method : 'PATCH',
+        headers : {
+            sessiontoken : localStorage.getItem( 'token' ),
+            'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify( data )
+        };
+
+        fetch( url, settings )
+        .then( response => {
+            if( response.ok ){
+                return response.json();
+            }
+            throw new Error( response.statusText );
+        })
+        .then( responseJSON => {
+            if (modify == 1){
+                favBtn.innerHTML = "Un-Favorite"
+            }
+            else{
+                favBtn.innerHTML = "Favorite"
+            }
+            let url2 = `/api/get-userby_id?_id=${currentUserId}`;
+
+            let settings2 = {
+                method : 'GET'
+            }
+
+            fetch( url2, settings2 )
+                .then( response => {
+                    if( response.ok ){
+                        return response.json();
+                    }
+                    throw new Error( response.statusText );
+                })
+                .then( responseJSON => {
+                    setProfile( responseJSON );
+                    setArtworks();
+
+                })
+                .catch( err => {
+                    console.log( err.message );
+                });
 
         })
         .catch( err => {
@@ -700,6 +1090,8 @@ function init(){
     //watchLikeFaveFollowBtns();
     watchCommentForm();
     //watchUploadFOrm();
+    searchEvent();
+    watchArtworkUser();
 }
 
 init();

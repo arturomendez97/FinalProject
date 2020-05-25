@@ -86,6 +86,26 @@ const Users = {
                 .catch( err => {
                     return err;
                 });
+    },
+    updateLikeUser : function( user_id, newLikes ){
+        return userModel
+                .updateOne({ _id: user_id },{ $set : { likes : newLikes }})
+                .then( userUpdated => {
+                    return userUpdated;
+                })
+                .catch( err => {
+                    return err;
+                });
+    },
+    updateFavUser : function( user_id, newFavs ){
+        return userModel
+                .updateOne({ _id: user_id },{ $set : { favorites : newFavs }})
+                .then( userUpdated => {
+                    return userUpdated;
+                })
+                .catch( err => {
+                    return err;
+                });
     }
 }
 

@@ -20,34 +20,23 @@
     </head>
 
     <body>
-        
-        <!--Unordered list, bullets
-        <section class= "navigation">
-            <div class = "menu activeOption" id = "home">
-                Logo
-                </a>
-            </div>
-            <div class = "right menu" id = "about">
-                    Login
-                </a>
-            </div>
-            <div class = "menu" id = "review">
-                    Signup
-                </a>
-            </div>
-    </section>-->
+      
     
     <div class="navigation">
-        <a class="menu activeOption" id = "home">Home</a>
-        <input class = "search" type="text" placeholder="Search...">
+        <a class="menu menuElement activeOption" id = "home">Home</a>
+        <form class = "searchForm">
+          <fieldset class = "searchFieldset">
+            <input class = "search" type="text" placeholder="Search..." id = "search">
+          </fieldset>
+        </form>
         <a class = "logOut" id = "logout">LogOut</a>
-        <a class="menu" id = "addArtwork">Upload</a>
-        <a class="menu" id = "profile">Profile</a>
+        <a class="menu menuElement" id = "addArtwork">Upload</a>
+        <a class="menu menuElement" id = "profile">Profile</a>
       </div> 
       
       <section class = "extraSection">
-          <a class = "menu" id = "about">About us</a>
-          <a class="menu" id = "external">External Links</a>
+          <a class = "menu menuElement" id = "about">About us</a>
+          <a class="menu menuElement" id = "external">External Links</a>
       </section>
       <section class = "addArtwork">
       </section>
@@ -68,34 +57,6 @@
                   <!--
                     <div class = "thumbnail" >
                     <img src = "./../assets/1.png" height="238" width="238" alt= "Artwork">
-                    </div>
-
-                    <div class = "thumbnail">
-                      <img src = "./../assets/2.png" height="238" width="238" alt= "Artwork">
-                    </div>
-                    
-                    <div class = "thumbnail">
-                      <img src = "./../assets/3.png" height="238" width="238" alt= "Artwork">
-                    </div>
-
-                    <div class = "thumbnail">
-                      <img src = "./../assets/4.png" height="238" width="238" alt= "Artwork">
-                    </div>
-                    
-                    <div class = "thumbnail">
-                      <img src = "./../assets/5.png" height="238" width="238" alt= "Artwork">
-                    </div>
-                    <div class = "thumbnail">
-                      <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
-                    </div>
-                    <div class = "thumbnail">
-                      <img src = "./../assets/7.png" height="238" width="238" alt= "Artwork">
-                    </div>
-                    <div class = "thumbnail">
-                      <img src = "./../assets/8.png" height="238" width="238" alt= "Artwork">
-                    </div>
-                    <div class = "thumbnail">
-                      <img src = "./../assets/3.png" height="238" width="238" alt= "Artwork">
                     </div>-->
                 </section>
 
@@ -105,6 +66,13 @@
                   <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
                 </div>-->
               </section>
+
+              <section class = "gallery searchSection hidden">
+                <!--
+                  <div class = "thumbnail">
+                    <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
+                  </div>-->
+                </section>
         </section>
         
         <section class = "profileSection hidden">
@@ -125,21 +93,6 @@
                 <section class = "gallery galleryProfile">
                   <!--
                   <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/2.png" height="238" width="238" alt= "Artwork">
-                  </div>
-                  
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/3.png" height="238" width="238" alt= "Artwork">
-                  </div>
-  
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/4.png" height="238" width="238" alt= "Artwork">
-                  </div>
-                  
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/5.png" height="238" width="238" alt= "Artwork">
-                  </div>
-                  <div class = "thumbnail profileThumbnail">
                     <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
                   </div>
                   -->
@@ -150,25 +103,8 @@
               <div class = "profileFavorites">
                 <h3 class = "greenBtmBdr"> Favorites </h3>
 
-                <section class = "gallery">
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/2.png" height="238" width="238" alt= "Artwork">
-                  </div>
+                <section class = "gallery FavsGalleryProfile">
                   
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/3.png" height="238" width="238" alt= "Artwork">
-                  </div>
-  
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/4.png" height="238" width="238" alt= "Artwork">
-                  </div>
-                  
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/5.png" height="238" width="238" alt= "Artwork">
-                  </div>
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
-                  </div>
                 </section>
 
               </div>
@@ -177,7 +113,7 @@
 
             <div class = "profileFollowsLikes">
 
-              <div class = "profileFollows">
+              <div class = "userLink profileFollows">
                 <h3 class ="greenBtmBdr"> Following </h3>
 
                 <section class = "following">
@@ -188,25 +124,8 @@
               <div class = "profileLikes">
                 <h3 class = "greenBtmBdr"> Likes </h3>
 
-                <section class = "gallery">
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/2.png" height="238" width="238" alt= "Artwork">
-                  </div>
+                <section class = "gallery likesGalleryProfile">
                   
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/3.png" height="238" width="238" alt= "Artwork">
-                  </div>
-  
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/4.png" height="238" width="238" alt= "Artwork">
-                  </div>
-                  
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/5.png" height="238" width="238" alt= "Artwork">
-                  </div>
-                  <div class = "thumbnail profileThumbnail">
-                    <img src = "./../assets/6.png" height="238" width="238" alt= "Artwork">
-                  </div>
                 </section>
 
               </div>
@@ -268,7 +187,7 @@
         <section class = "ArtworkSection hidden">
           <div class = "artworkContainer">
            <div class = "leftSide">
-            <h1 class = "usernametext">
+            <h1 class = "userLink usernametext menu" id = "externalUserProfile">
               Username
             </h1>
             <div class = "followBtnDiv">
