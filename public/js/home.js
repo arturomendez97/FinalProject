@@ -519,6 +519,7 @@ function artworkPageEvent(){
             let userDescription = document.querySelector(".userDescription")
             let followBtnDiv = document.querySelector(".followBtnDiv")
             let commentsContainer = document.querySelector(".comments")
+            let editnDeleteDiv = document.querySelector(".editnDeleteDiv")
 
 
             // Ahora hacemos fetch al artwork con el id que tiene la imagen
@@ -573,7 +574,7 @@ function artworkPageEvent(){
                                 .then( currentUserJSON => {
                                     
                                     if (currentUserId != responseJSON._id){
-
+                                        editnDeleteDiv.innerHTML =''
                                         //Checa si el usuario ya le da follow a este otro usuario para que el boton diga follow o unfollow
                                         if (currentUserJSON.follows.includes(responseJSON._id)){
                                             followBtnDiv.innerHTML = `
@@ -608,6 +609,16 @@ function artworkPageEvent(){
 
                                     }
                                     else{
+
+                                        editnDeleteDiv.innerHTML =`
+                                                        <button type = "submit" class = "editArtBtn" name = "${artwork._id}">
+                                                                Edit
+                                                            </button>
+                                                            <button type = "submit" class = "deleteArtBtn" name = "${artwork._id}">
+                                                                Delete
+                                                            </button>
+                                                            `
+
                                         btns.innerHTML = `
                                         <button class = "likeBtn hidden" type="button" name = "${artwork._id}">Like</button> 
                                         <button class = "favBtn hidden" type="button" name = "${artwork._id}">Favorite</button> 
@@ -618,6 +629,7 @@ function artworkPageEvent(){
                                     }
         
                                     watchLikeFaveFollowBtns();
+                                    watchArtEditDeleteBtns();
                                     
         
                                     usernameText.innerHTML = `${responseJSON.username}`
@@ -643,16 +655,42 @@ function artworkPageEvent(){
                                             
                                             
                                             for (k = 0; k< commentsJSON.length; k++) {
-                                                commentsContainer.innerHTML += `
-                                                <div class = "comment"> 
-                                                    <div class = "commentUser">
-                                                    ${commentsJSON[k].author.username}
+
+                                                if(commentsJSON[k].author._id == currentUserId){
+                                                    commentsContainer.innerHTML += `
+                                                    <div class = "comment"> 
+                                                        <div class = "commentUser">
+                                                        ${commentsJSON[k].author.username}
+                                                        </div>
+                                                        <div class = "commentText">
+                                                        ${commentsJSON[k].content}
+                                                        </div>
+                                                        
                                                     </div>
-                                                    <div class = "commentText">
-                                                    ${commentsJSON[k].content}
+                                                    <div class = "commentBtns">
+                                                        <button type = "submit" class = "clickable editBtn" id = "Edit Comment">
+                                                                Edit
+                                                            </button>
+                                                            <button type = "submit" class = "clickable deleteBtn" id = "Edit Comment">
+                                                                Delete
+                                                            </button>
                                                     </div>
-                                                </div>
-                                                `
+                                                    `
+                                                }
+                                                else{
+                                                    commentsContainer.innerHTML += `
+                                                    <div class = "comment"> 
+                                                        <div class = "commentUser">
+                                                        ${commentsJSON[k].author.username}
+                                                        </div>
+                                                        <div class = "commentText">
+                                                        ${commentsJSON[k].content}
+                                                        </div>
+                                                    </div>
+                                                    `
+                                                }
+
+                                                
                                             }
         
                                         })
@@ -706,7 +744,7 @@ function watchArtworkUser(){
                     setProfile(responseJSON)
                 })
                 .catch( err => {
-                    console.log( err.message );
+                    //console.log( err.message );
                 });
             }
         })
@@ -805,6 +843,72 @@ function watchCommentForm(){
     })
 }
 
+function watchCommentEditDelete(){
+    let btns = document.querySelector(".comments")
+
+    btns.addEventListener('click', (event) =>{
+        if (event.target.classList.contains("editBtn")){
+           console.log(event.target.closest('div.comment'))
+        }
+    })
+}
+
+function watchArtEditDeleteBtns(){
+    let editBtn = document.querySelector( ".editArtBtn");
+    let deleteBtn = document.querySelector( ".deleteArtBtn");
+
+    deleteBtn.addEventListener( 'click', ( event ) =>{
+        //First delete al comments on the artwork and then delete the artwork
+            let url = `/api/delete-commentsbyArtwork?_id=${deleteBtn.name}`;
+        
+            let settings = {
+                method : 'DELETE',
+            }
+        
+            fetch( url, settings )
+                .then( response => {
+                    if( response.ok ){
+                        return response.json();
+                    }
+                    throw new Error( response.statusText );
+                })
+                .then( commentsJSON => {
+
+                    let url2 = `/api/delete-artworkbyid?_id=${deleteBtn.name}`;
+        
+                    let settings2 = {
+                        method : 'DELETE',
+                    }
+                
+                    fetch( url2, settings2 )
+                        .then( response => {
+                            if( response.ok ){
+                                return response.json();
+                            }
+                            throw new Error( response.statusText );
+                        })
+                        .then( commentsJSON => {
+                            console.log("Comments and artwork deleted succesfully")
+                            window.location.href = "../pages/home.html";
+                            
+
+                        })
+                        .catch( err => {
+                            console.log( err.message );
+                        });
+
+
+
+                })
+                .catch( err => {
+                    console.log( err.message );
+                });
+    })
+
+    editBtn.addEventListener( 'click', ( event )=>{
+        
+    } )
+}
 
 function watchLikeFaveFollowBtns(){
     //let btnsContainer = document.querySelector( '.artworkContainer' );
@@ -1036,7 +1140,12 @@ function watchLogoutButton(){
 }
 
 function watchUploadFOrm(){
-    let uploadForm = document.querySelector( '.uploadArt' );
+    let uploadBtn = document.querySelector( '.submit-btn' );
+
+    uploadBtn.addEventListener( 'click' , ( event ) => {
+        window.location.href = "../index.html";
+    })
+    /*
 
     uploadForm.addEventListener( 'submit' , ( event ) => {
         event.preventDefault();
@@ -1074,9 +1183,9 @@ function watchUploadFOrm(){
             .catch( err => {
                 console.log( err.message );
                 window.location.href = "../index.html";
-            });*/
+            });
 
-    })
+    })*/
 }
 
 function init(){
@@ -1092,6 +1201,8 @@ function init(){
     //watchUploadFOrm();
     searchEvent();
     watchArtworkUser();
+    //On hold
+    //watchCommentEditDelete();
 }
 
 init();

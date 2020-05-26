@@ -45,7 +45,7 @@ section{
 
 .profileGalleryFavorites, .profileFollowsLikes{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-around;
 }
 
@@ -56,7 +56,7 @@ section{
 
 .profileGallery, .profileFavorites, .profileFollows, .profileLikes{
   margin: 20px;
-  width: 50%;
+  width: 90%;
 }
 
 
@@ -91,7 +91,7 @@ section{
     border-bottom : 1px solid #37403e;
   }
 
-.gallery, .followBtnDiv{
+.gallery, .followBtnDiv, .editnDeleteDiv{
     justify-content: center;
     display: flex;
   }
@@ -140,6 +140,9 @@ section{
     color: #44cf6c;
   }
   
+.indexHome{
+  margin-right: auto;
+}
   /* Style the search box inside the navigation bar */
 .search {
     border: none;
@@ -168,7 +171,7 @@ section{
   }
 
 
-.submit-btn, .followBtn, .likeBtn, .favBtn, .commentButton{
+.submit-btn, .followBtn, .likeBtn, .favBtn, .commentButton, .editBtn, .deleteBtn, .editArtBtn, .deleteArtBtn{
     background-color : #2F9C95;
     cursor: pointer;
     font-size: 17px;
@@ -206,7 +209,7 @@ section{
   text-align : center;
 }
 
-.likeBtn, .favBtn{
+.likeBtn, .favBtn, .editBtn, .deleteBtn, .editArtBtn, .deleteArtBtn{
   justify-content: center;
   height: 30px;
   color : white;
@@ -217,13 +220,27 @@ section{
   width: 30%;
 }
 
+.editBtn, .deleteBtn{
+  justify-content: center;
+  height: auto;
+  color : white;
+  border : 0;
+  border-radius : 7px;
+  text-align : center;
+  width : auto;
+}
+
+.commentBtns{
+  margin-left: 35px;
+}
+
 .commentButton{
   justify-content: center;
   color : white;
   border : 0;
   border-radius : 7px;
   text-align : center;
-  width: 10%;
+  width: 40%;
   height: 40px;
 }
 
@@ -233,7 +250,7 @@ section{
   justify-content: space-evenly;
 }
 
-.submit-btn:hover, .followBtn:hover, .likeBtn:hover, .favBtn:hover, #addArtwork:hover, .commentButton:hover{
+.submit-btn:hover, .followBtn:hover, .likeBtn:hover, .favBtn:hover, #addArtwork:hover, .commentButton:hover, .editBtn:hover, .deleteBtn:hover, .editArtBtn:hover, .deleteArtBtn:hover{
     background-color : #44cf6c;
 }
 
@@ -513,8 +530,20 @@ h3{
   width: 80%;
 }
 
+.profileThumbnail{
+  display: inline-flex;
+  height: auto;
+  width: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+
 
 @media (max-width:500px){
+
+  
   td{
     display: flex;
     flex-direction: column;
@@ -582,6 +611,31 @@ h3{
     width: 70%;
     height: 100%;
     border-radius: 2%;
+  }
+
+  .commentButton{
+    justify-content: center;
+    color : white;
+    border : 0;
+    border-radius : 7px;
+    text-align : center;
+    width: 20%;
+    height: 40px;
+  }
+  
+  .profileGalleryFavorites, .profileFollowsLikes{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  .profileThumbnail{
+    display: inline-flex;
+    height: auto;
+    width: 33%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
   }
 }
 
@@ -661,5 +715,26 @@ h3{
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }
+
+    .commentButton{
+      justify-content: center;
+      color : white;
+      border : 0;
+      border-radius : 7px;
+      text-align : center;
+      width: 10%;
+      height: 40px;
+    }
+
+    .profileGalleryFavorites, .profileFollowsLikes{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    .profileGallery, .profileFavorites, .profileFollows, .profileLikes{
+      margin: 20px;
+      width: 50%;
     }
 }

@@ -51,6 +51,16 @@ const Comments = {
                 .catch( err => {
                     throw new Error( err.message );
                 });
+    },
+    removeCommentsByArtworkId : function( id ){
+        return commentModel
+                .deleteMany( { artwork : id } )
+                .then( comments => {
+                    return comments;
+                })
+                .catch( err => {
+                    throw new Error( err.message );
+                });
     }
 }
 
