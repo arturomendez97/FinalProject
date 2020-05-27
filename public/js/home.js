@@ -693,7 +693,7 @@ function artworkPageEvent(){
                                                             </button>
                                                     </div>
                                                     <section class = "hidden" name = "edit${commentsJSON[k].content}">
-                                                        <section class = "editCommentForm">
+                                                        <section>
                                                             <h3> Edit Comment </h3>
                                                             <form class = "editCommentForm">
                                                                 <input type="text" class="inputComment2" name="comment2">
@@ -717,6 +717,8 @@ function artworkPageEvent(){
                                                     </div>
                                                     `
                                                 }
+
+                                                //watchCommentEditForms()
 
                                                 
                                             }
@@ -747,6 +749,17 @@ function artworkPageEvent(){
         });
     }
 }
+
+function watchCommentEditForms(){
+    let forms = document.querySelector(".editCommentForm")
+    /*
+    for(i=0;i<forms.length;i++){
+        forms[i].addEventListener( 'submit' , ( event ) =>{
+            event.preventDefault()
+        })
+    }*/
+}
+
 
 function watchArtworkUser(){
     let artworkUser = document.getElementsByClassName("userLink")
@@ -880,7 +893,7 @@ function watchCommentForm(){
 
             })
             .catch( err => {
-                console.log( err.message );
+                contentContainer.placeholder = err.message;
             });
         }
         else{
@@ -900,7 +913,7 @@ function watchCommentEditDelete(){
         if (event.target.classList.contains("deleteBtn")){
             
             //Ahora, buscar el comment de nuestro usuario que tenga ese content y lo borramos.
-            let url = `/api/delete-commentsbycontentAndUserId?content=${content}`;
+            let url = `/api/delete-commentsbycontentAndUserId?content=${event.target.name}`;
         
                     let settings = {
                         method : 'DELETE',
@@ -917,7 +930,6 @@ function watchCommentEditDelete(){
                             throw new Error( response.statusText );
                         })
                         .then( commentsJSON => {
-                            console.log(commentsJSON)
                             console.log("Comment deleted succesfully")
 
                         })

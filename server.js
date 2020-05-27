@@ -143,7 +143,7 @@ app.get( '/api/validate-user', ( req, res ) => {
             res.statusMessage = "Session expired!";
             return res.status( 400 ).end();
         }
-        console.log(decoded)
+        //console.log(decoded)
         return res.status( 200 ).json( decoded );
     });
 });
@@ -435,7 +435,7 @@ app.delete( '/api/delete-commentsbycontentAndUserId', jsonParser, ( req, res ) =
             .removeCommentbyContentAndUserId( _id, content )
             .then( result => {
                 console.log(result)
-                if (result.ok == 0){
+                if (result.deletedCount == 0){
                     res.statusMessage = `No comments with the artwork = ${_id} were found on the list.`;
                     return res.status ( 404 ).end();
                 }
