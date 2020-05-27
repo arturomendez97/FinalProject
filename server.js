@@ -413,6 +413,46 @@ app.delete( '/api/delete-commentsbyArtwork', jsonParser, ( req, res ) => {
         });
 });
 
+//Delete comments by content and user id
+app.delete( '/api/delete-commentsbycontentAndUserId', jsonParser, ( req, res ) => {
+
+    const { sessiontoken } = req.headers;
+    jsonwebtoken.verify( sessiontoken, SECRET_TOKEN, ( err, decoded ) => {
+        if( err ){
+            res.statusMessage = "Session expired!";
+            return res.status( 400 ).end();
+        }
+
+        let _id = decoded._id;
+        let content = req.query.content;
+
+        if( !_id || !content){
+            res.statusMessage = "Parameter missing in the body of the request.";
+            return res.status( 406 ).end();
+        }
+
+        Comments
+            .removeCommentbyContentAndUserId( _id, content )
+            .then( result => {
+                console.log(result)
+                if (result.ok == 0){
+                    res.statusMessage = `No comments with the artwork = ${_id} were found on the list.`;
+                    return res.status ( 404 ).end();
+                }
+
+                console.log(_id)
+                console.log(content)
+                //Return status text and user parsed as a json object.
+                return res.status( 200 ).json( result );
+            })
+            .catch( err => {
+                res.statusMessage = "Something is wrong with the database, try again later.";
+                //500 es el típico para cuando el server está abajo.
+                return res.status( 500 ).end();
+            });
+    });
+});
+
 //Create comment endpoint
 app.post( '/api/create-comment', jsonParser, ( req, res ) => {
 

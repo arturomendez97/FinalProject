@@ -102,7 +102,6 @@ function validateUser(){
 }
 
 function setProfile( responseJSON ){
-
     //responseJSON tiene el objeto del usuario.
     let profileUsername = document.querySelector(".profileUsername");
     let profileDescription = document.querySelector(".profileDescription");
@@ -110,6 +109,8 @@ function setProfile( responseJSON ){
     let galleryProfile = document.querySelector(".galleryProfile");
     let profileLikes = document.querySelector(".likesGalleryProfile");
     let profileFavs = document.querySelector(".FavsGalleryProfile");
+
+    console.log("WUUU")
 
     //Get artworks by user id
     let url = `/api/get-artworksbyid?_id=${responseJSON._id}`;
@@ -124,7 +125,7 @@ function setProfile( responseJSON ){
             throw new Error( response.statusText );
         })
         .then( userArtworks => {
-            galleryProfile.innerHTML = "";
+            galleryProfile.innerHTML = '';
             for (k = 0; k< userArtworks.length; k++) {
                 //PAra cuando ponga una imagen, a la imagen le puedo poner el id del artwork para encontrarlo despues
                 galleryProfile.innerHTML += `
@@ -135,7 +136,8 @@ function setProfile( responseJSON ){
             }
 
             //Set following
-            profileFollows.innerHTML = ''
+            profileFollows.innerHTML = '';
+            console.log(responseJSON.follows)
             for (i = 0; i < responseJSON.follows.length; i++) {
                 
                 let url = `/api/get-userby_id?_id=${responseJSON.follows[i]}`;
@@ -185,7 +187,7 @@ function setProfile( responseJSON ){
                         throw new Error( response.statusText );
                     })
                     .then( responseJSON => {
-                        profileLikes.innerHTML = `
+                        profileLikes.innerHTML += `
                         <div class = "profileThumbnail" >
                             <img src = "./../${responseJSON.path}" height="238" width="238" alt= "Artwork" id = "${responseJSON._id}">
                             </div>
@@ -211,7 +213,8 @@ function setProfile( responseJSON ){
                         throw new Error( response.statusText );
                     })
                     .then( responseJSON => {
-                        profileFavs.innerHTML = `
+                        
+                        profileFavs.innerHTML += `
                         <div class = "profileThumbnail" >
                             <img src = "./../${responseJSON.path}" height="238" width="238" alt= "Artwork" id = "${responseJSON._id}">
                             </div>
@@ -363,11 +366,8 @@ function navigationBarEvent(){
 
             //event.target se usa para targetear al elemento al que se le hizo click.
             let currentElement = event.target.id;
-
-            //Caso específico para cuando le das click al nombre del usuario en un artwork. Para no repetir el id
-            if (currentElement == "externalUserProfile"){
-                currentElement = "profile"
-            }
+            
+            
 
             //Para cuando andas en el profile de alguién mas pero le das click al button profile, para que se muestre el tuyo de nuevo
             if (currentElement == "profile"){
@@ -391,6 +391,12 @@ function navigationBarEvent(){
                         console.log( err.message );
                     });
             }
+
+            //Caso específico para cuando le das click al nombre del usuario en un artwork. Para no repetir el id
+            if (currentElement == "externalUserProfile"){
+                currentElement = "profile"
+            }
+            
             //También podría ser ("." + currentElement + "Section")
             let elementToShow = document.querySelector(`.${currentElement}Section`);
             //Mostrar al que se le hizo click
@@ -400,7 +406,6 @@ function navigationBarEvent(){
             //Poner lo del gris del menu de arriba
             let menuToShow = document.getElementById(currentElement)
             menuToShow.classList.add("activeOption");
-            
 
         });
     }
@@ -492,6 +497,7 @@ function artworkPageEvent(){
 
     for (let i = 0; i < navigationElements.length; i++){
         navigationElements[i].addEventListener("click", (event) => {
+            if (event.target.children.length == 0){
 
             //Esconde la que está desplegada actualmente.
             let selectedSection = document.querySelector(".selectedSection");
@@ -575,6 +581,15 @@ function artworkPageEvent(){
                                     
                                     if (currentUserId != responseJSON._id){
                                         editnDeleteDiv.innerHTML =''
+
+                                        editnDeleteDiv.innerHTML =`
+                                                        <button type = "submit" class = "editArtBtn hidden" name = "${artwork._id}">
+                                                                Edit
+                                                            </button>
+                                                            <button type = "submit" class = "deleteArtBtn hidden" name = "${artwork._id}">
+                                                                Delete
+                                                            </button>
+                                                            `
                                         //Checa si el usuario ya le da follow a este otro usuario para que el boton diga follow o unfollow
                                         if (currentUserJSON.follows.includes(responseJSON._id)){
                                             followBtnDiv.innerHTML = `
@@ -633,7 +648,9 @@ function artworkPageEvent(){
                                     
         
                                     usernameText.innerHTML = `${responseJSON.username}`
-                                    usernameText.name = responseJSON._id
+                                    console.log(responseJSON._id)
+                                    usernameText.setAttribute("name", responseJSON._id)
+                                    //usernameText.name = responseJSON._id
                                     userDescription.innerHTML = `${responseJSON.description}`
         
                                     //Ahora obtenemos todos los comentarios para este artwork.
@@ -668,13 +685,24 @@ function artworkPageEvent(){
                                                         
                                                     </div>
                                                     <div class = "commentBtns">
-                                                        <button type = "submit" class = "clickable editBtn" id = "Edit Comment">
+                                                        <button type = "submit" class = "clickable editBtn" name = "${commentsJSON[k].content}">
                                                                 Edit
                                                             </button>
-                                                            <button type = "submit" class = "clickable deleteBtn" id = "Edit Comment">
+                                                            <button type = "submit" class = "clickable deleteBtn" name = "${commentsJSON[k].content}">
                                                                 Delete
                                                             </button>
                                                     </div>
+                                                    <section class = "hidden" name = "edit${commentsJSON[k].content}">
+                                                        <section class = "editCommentForm">
+                                                            <h3> Edit Comment </h3>
+                                                            <form class = "editCommentForm">
+                                                                <input type="text" class="inputComment2" name="comment2">
+                                                                <button type = "submit" class = "clickable commentButton2" id = "submitComment2">
+                                                                Submit
+                                                            </button>
+                                                            </form>
+                                                        </section>
+                                                    </section>
                                                     `
                                                 }
                                                 else{
@@ -701,6 +729,7 @@ function artworkPageEvent(){
 
                                 })
                                 .catch( err => {
+                                    console.log(err)
                                     console.log( err.message );
                                 });
 
@@ -712,6 +741,7 @@ function artworkPageEvent(){
                 .catch( err => {
                     console.log( err.message );
                 });
+            }
 
 
         });
@@ -727,7 +757,6 @@ function watchArtworkUser(){
             if (event.target.id = "externalUserProfile"){
                 //Get user by id and pass it to setprofile.
             let url = `/api/get-userby_id?_id=${event.target.getAttribute("name")}`;
-            console.log(event.target)
     
             let settings = {
                 method : 'GET'
@@ -741,6 +770,8 @@ function watchArtworkUser(){
                     throw new Error( response.statusText );
                 })
                 .then( responseJSON => {
+                    console.log("settingProfile")
+
                     setProfile(responseJSON)
                 })
                 .catch( err => {
@@ -809,17 +840,36 @@ function watchCommentForm(){
                         })
                         .then( userJSON => {
                             //Display comment
-                            commentsContainer.innerHTML += `
-                            <div class = "comment"> 
-                                <div class = "commentUser">
-                                ${userJSON.username}
+                                commentsContainer.innerHTML += `
+                                <div class = "comment"> 
+                                    <div class = "commentUser">
+                                    ${userJSON.username}
+                                    </div>
+                                    <div class = "commentText">
+                                    ${responseJSON.content}
+                                    </div>
+                                    
                                 </div>
-                                <div class = "commentText">
-                                ${responseJSON.content}
+                                <div class = "commentBtns">
+                                    <button type = "submit" class = "clickable editBtn" name = "${content}">
+                                            Edit
+                                        </button>
+                                        <button type = "submit" class = "clickable deleteBtn" name = "${content}">
+                                            Delete
+                                        </button>
                                 </div>
-                            </div>
-                            `
-                            
+                                <section class = "hidden" name = "edit${content}">
+                                                        <section class = "editCommentForm">
+                                                            <h3> Edit Comment </h3>
+                                                            <form class = "editCommentForm">
+                                                                <input type="text" class="inputComment2" name="comment2">
+                                                                <button type = "submit" class = "clickable commentButton2" id = "submitComment2">
+                                                                Submit
+                                                            </button>
+                                                            </form>
+                                                        </section>
+                                                    </section>
+                                `
                             
                         })
                         .catch( err => {
@@ -847,10 +897,48 @@ function watchCommentEditDelete(){
     let btns = document.querySelector(".comments")
 
     btns.addEventListener('click', (event) =>{
-        if (event.target.classList.contains("editBtn")){
-           console.log(event.target.closest('div.comment'))
+        if (event.target.classList.contains("deleteBtn")){
+            
+            //Ahora, buscar el comment de nuestro usuario que tenga ese content y lo borramos.
+            let url = `/api/delete-commentsbycontentAndUserId?content=${content}`;
+        
+                    let settings = {
+                        method : 'DELETE',
+                        headers : {
+                            sessiontoken : localStorage.getItem( 'token' )
+                        }
+                    }
+                
+                    fetch( url, settings )
+                        .then( response => {
+                            if( response.ok ){
+                                return response.json();
+                            }
+                            throw new Error( response.statusText );
+                        })
+                        .then( commentsJSON => {
+                            console.log(commentsJSON)
+                            console.log("Comment deleted succesfully")
+
+                        })
+                        .catch( err => {
+                            console.log( err.message );
+                        });
         }
-    })
+
+        if (event.target.classList.contains("editBtn")){
+            content = event.target.name
+            let nodes = document.getElementsByName(`edit${content}`)
+            let formSection = nodes[0]
+
+            if (formSection.classList.contains("hidden")){
+                formSection.classList.remove("hidden")
+            }
+            else{
+                formSection.classList.add("hidden")
+            }
+        }
+    })    
 }
 
 function watchArtEditDeleteBtns(){
@@ -1129,7 +1217,6 @@ function updateFavorite(favBtn, modify){
         });
 }
 
-
 function watchLogoutButton(){
     let logOutBtn = document.querySelector( '.logOut' );
 
@@ -1201,8 +1288,7 @@ function init(){
     //watchUploadFOrm();
     searchEvent();
     watchArtworkUser();
-    //On hold
-    //watchCommentEditDelete();
+    watchCommentEditDelete();
 }
 
 init();
