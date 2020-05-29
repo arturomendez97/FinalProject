@@ -30,6 +30,16 @@ section{
   border-radius: 5%;
 }
 
+.logo{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  width: 200px;
+  height: 50px;
+}
+
 .profileDescription, .artworkDescription, .userDescription{
   width: 300px;
 }
